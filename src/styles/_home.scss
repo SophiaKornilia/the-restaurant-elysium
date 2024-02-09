@@ -1,0 +1,35 @@
+main {
+  #hero {
+    position: absolute;
+    top: 60px;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  #text-container {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 400px;
+    padding-top: 100px;
+    // justify-content: space-evenly;
+    color: white;
+    position: absolute;
+
+    h1 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      font-size: 70px;
+      height: 100px;
+    }
+
+    h5 {
+        width: 50%;
+    }
+  }
+}
