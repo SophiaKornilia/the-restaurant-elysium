@@ -1,16 +1,21 @@
-import { Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom";
 
-import '../styles/main.scss'
+import "../styles/main.scss";
+import { Navigation } from "../components/Navigation";
+import { Footer } from "../components/Footer";
+
 export const Layout = () => {
-    return (
-        <>
-        <header>
-
-        </header>
-        <main>
-            <Outlet /> 
-        </main>
-        <footer></footer>
-        </>
-    ) 
-}
+  return (
+    <>
+      <header>
+        <Navigation />
+      </header>
+      <main>
+        <Outlet />
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </>
+  );
+};

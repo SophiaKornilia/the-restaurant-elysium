@@ -1,0 +1,38 @@
+nav {
+    background-color: black;
+    display: flex;
+    color: #A0A0A0;
+    width: 100vw;
+    height: 60px;
+    align-items: center;
+    justify-content: space-between;
+    // padding: 0px 20px;
+
+    .pagesContainer {
+        width: 50%;
+    }
+    
+    .navPages {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    h2{
+        text-decoration: none;
+        color: #A0A0A0;
+    }
+
+    li {
+        list-style-type: none;
+
+        a{
+            text-decoration: none;
+            color: #A0A0A0;
+        }
+    }
+
+    li:hover {
+        background-color: rgb(56, 56, 56);
+    }
+}
