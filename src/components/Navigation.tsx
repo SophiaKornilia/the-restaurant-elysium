@@ -5,7 +5,7 @@ export const Navigation = () => {
     <>
       <nav>
         <div>
-          <h2>
+          <h2 id="nav-logo">
             <NavLink to="/">Elysium</NavLink>
           </h2>
         </div>
