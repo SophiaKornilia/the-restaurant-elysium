@@ -1,15 +1,20 @@
-@use './navigation';
-@use './footer';
-@use './contact';
-@use './booking';
-@use './home';
-
+@use "./navigation";
+@use "./footer";
+@use "./contact";
+@use "./booking";
+@use "./home";
 
 body {
   margin: 0;
 }
 
 #root {
-    max-width: 100vw;
-    text-align: center;
-  }
+  max-width: 100vw;
+  text-align: center;
+}
+
+header {
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+}

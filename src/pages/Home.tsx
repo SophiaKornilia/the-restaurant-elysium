@@ -17,7 +17,8 @@ export const Home = () => {
       </div>
       <div className="background-container">
         <div className="image-container">
-            <button className="book-btn">Book a table</button>
+          <button className="book-btn">Book a table</button>
+          <button className="menu-btn">Menu</button>
         </div>
       </div>
     </>
