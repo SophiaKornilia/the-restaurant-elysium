@@ -1,0 +1,29 @@
+#container { 
+    min-height: 100vh;
+    background-image: url("../images/image6.png");
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #a0a0a0;
+    height: 100%;
+    flex-wrap: wrap-reverse;
+    }
+
+    #text-container {
+    width: 30%;
+    padding: 40px 10px;
+    margin-right: auto;
+    font-size: 30px;
+    }
+
+#form-container {
+    display: flex;
+    flex-direction: column;
+    width: 50%; 
+    background: rgba(217, 217, 217, 0.2);
+    backdrop-filter: blur(7.5px);
+    height: 30vh;
+    margin: 40px;
+    padding: 30px 70px;
+}
