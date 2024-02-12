@@ -1,12 +1,11 @@
+
 import { BookingGet } from "../components/BookingGet";
 // import { RestaurantGet } from "../components/RestaurantGet";
-
 
 export const Home = () => {
   return (
     <>
-    {/* <RestaurantGet />  */}
-    
+
       <div className="hero-image">
         <div className="hero-text">
           <h1>E L Y S I U M
