@@ -1,14 +1,17 @@
-import { RestaurantGet } from "../components/RestaurantGet";
+import { BookingGet } from "../components/BookingGet";
+// import { RestaurantGet } from "../components/RestaurantGet";
 
 
 export const Home = () => {
   return (
     <>
-    <RestaurantGet /> 
-    <BookingGet /> 
+    {/* <RestaurantGet />  */}
+    
       <div className="hero-image">
         <div className="hero-text">
-          <h1>E L Y S I U M</h1>
+          <h1>E L Y S I U M
+          <BookingGet /> 
+          </h1>
           <h5>
             At Elysium, we believe in creating a culinary journey that
             transcends borders. Our restaurant is a celebration of diverse
