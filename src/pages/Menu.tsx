@@ -1,7 +1,7 @@
 export const Menu = () => {
   return (
     <>
-      <div className="hero-image">
+      <div className="menu-hero-image">
         <h1>Menu</h1>
         <div className="text-container">
           <div className="dish">
