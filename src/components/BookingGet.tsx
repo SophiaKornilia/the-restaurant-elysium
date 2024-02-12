@@ -1,14 +1,25 @@
 import axios from "axios";
+import { useState } from "react";
+import { IBooking } from "../models/IBooking";
 
 export const BookingGet = () => {
+  const [booking, setBooking] = useState<IBooking>(); 
+
   const searchBooking = async () => {
-    const response = await axios.get(
+    const response = await axios.get<IBooking>(
       "https://school-restaurant-api.azurewebsites.net/booking/restaurant/65c9d9502f64dba9babc81d6"
     );
+    setBooking(response.data);
 
-    console.log(response);
+    console.log("booking", response.data);
+
+    
   };
   searchBooking();
 
-  return <></>;
+  return (
+    <div> 
+   
+    </div>
+  )
 };
