@@ -1,16 +1,15 @@
 import axios from "axios";
-import { setHours, setMinutes } from "date-fns";
 import { ChangeEvent, SetStateAction, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { BookingGet } from "../components/BookingGet";
+
 import { IBooking } from "../models/IBooking";
 
 export const Booking = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [people, setPeople] = useState<number>(1);
 
-  const [booking, setBooking] = useState<IBooking[]>();
+  const [bookings, setBookings] = useState<IBooking[]>();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPeople(parseInt(e.target.value));
@@ -21,26 +20,28 @@ export const Booking = () => {
       "https://school-restaurant-api.azurewebsites.net/booking/restaurant/65c9d9502f64dba9babc81d6"
     );
 
-    setBooking(response.data);
-    console.log("booking", response.data)
-    console.log();
-    
-    
-    const handleClick = () => {booking?.map((booking) => {
-     <p key={booking.id}>{booking.date}</p>
-    } )};
-    
-    
-    // else {
-    //   alert("Fully booked, change date");
-    // }
-    // })
-    
+    setBookings(response.data);
   };
-  
-  if (!booking) {
+
+  const handleClick = () => {
+   
+    bookings?.map((aBooking) => {
+      console.log(aBooking.date);
+      const formattedSelectedDate = selectedDate?.toISOString().slice(0, 10);
+      if (JSON.stringify(aBooking.date) === JSON.stringify(formattedSelectedDate)) {
+        console.log("Det fungerar");
+      } else {
+        console.log("Nope de fungerar inte");
+        
+      }
+    });
+    return <div></div>;
+  };
+
+  if (!bookings) {
     searchBooking();
   }
+
   return (
     <div>
       {/* <BookingGet booking={} /> */}
@@ -66,18 +67,18 @@ export const Booking = () => {
               onChange={(date: SetStateAction<Date | null>) =>
                 setSelectedDate(date)
               }
-              dateFormat="dd-MM-yyyy"
+              dateFormat="yyyy-MM-DD"
               minDate={new Date()}
-              showTimeSelect
-              includeTimes={[
-                setHours(setMinutes(new Date(), 0), 18),
-                setHours(setMinutes(new Date(), 0), 21),
-              ]}
+              // showTimeSelect
+              // includeTimes={[
+              //   setHours(setMinutes(new Date(), 0), 18),
+              //   setHours(setMinutes(new Date(), 0), 21),
+              // ]}
             ></DatePicker>
-            <button onClick={() => {}}>Search available tables</button>
             <br></br>
             <p>Click here to cancel a booking</p>
           </form>
+          <button onClick={handleClick}>Search available tables</button>
         </div>
       </div>
     </div>
