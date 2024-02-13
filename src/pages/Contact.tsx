@@ -1,4 +1,4 @@
-import { ApiComponent } from "../components/ApiComponent";
+import { ApiComponent } from "../components/CreateCustomer";
 import facebookLogo from "../images/Facebook.png";
 import instagramLogo from "../images/Instagram.png";
 import tripAdvisor from "../images/TripAdvisor.png";
