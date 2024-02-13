@@ -3,7 +3,7 @@ import { useState, ChangeEvent } from "react";
 
 // 65c9d9502f64dba9babc81d6
 
-export const ApiComponent = () => {
+export const CreateCustomer = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");

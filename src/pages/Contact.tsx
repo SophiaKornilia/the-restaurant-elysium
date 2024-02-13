@@ -1,4 +1,4 @@
-import { ApiComponent } from "../components/CreateCustomer";
+import { CreateCustomer } from "../components/CreateCustomer";
 import facebookLogo from "../images/Facebook.png";
 import instagramLogo from "../images/Instagram.png";
 import tripAdvisor from "../images/TripAdvisor.png";
@@ -7,7 +7,7 @@ export const Contact = () => {
   return (
     <div id="contactContainer">
       <div id="textContainer">
-        <ApiComponent />
+        <CreateCustomer />
         <h2>Contact</h2>
         <p>
           Address: 123 Main Street <br />
