@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { IBooking } from "../models/IBooking";
 import { Button, Modal } from "react-bootstrap";
-import { CreateCustomer } from "../components/CreateCutomer";
+import { CreateCustomer } from "../components/CreateCustomer";
 
 export const Booking = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -163,7 +163,7 @@ export const Booking = () => {
               <CreateCustomer />
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleCreateBooking}>
+              <Button variant="secondary">
                 Confirm
               </Button>
               <Button variant="secondary" onClick={handleClose}>
