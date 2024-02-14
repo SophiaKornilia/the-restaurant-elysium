@@ -1,8 +1,13 @@
+import { useState } from "react"
 import { CheckAvailability } from "../components/CheckAvailability"
 
 export const Booking = () => {
+  const [itWorks, setItWorks] = useState(false);
+  console.log(itWorks);
+  
   return (
-    <CheckAvailability /> 
+    <CheckAvailability itWorks={setItWorks} /> 
+    
   )
 }
 
