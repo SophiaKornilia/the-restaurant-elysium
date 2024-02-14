@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useState, ChangeEvent } from "react";
-
+import { useState, ChangeEvent, useEffect } from "react";
+import { Customer } from "../models/Customer";
 // 65c9d9502f64dba9babc81d6
 
 export const CreateCustomer = () => {
@@ -9,19 +9,18 @@ export const CreateCustomer = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
-  var customerData = {
-    name: firstName,
-    lastname: lastName,
-    email: email,
-    phone: phone,
-  };
+  const [customer, setCustomer] = useState<Customer>()
 
-  console.log(customerData);
+  console.log(customer);
+  
+  useEffect(() => {
+    setCustomer(new Customer(firstName, lastName, email, phone));
+  }, [firstName, lastName, email, phone]);
 
   const handleClick = async () => {
     const response = await axios.post(
       "https://school-restaurant-api.azurewebsites.net/customer/create",
-      customerData
+      customer
     );
     console.log(response.data);
 

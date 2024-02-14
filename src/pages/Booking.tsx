@@ -1,22 +1,31 @@
 import axios from "axios";
-import { ChangeEvent, FormEvent, MouseEvent, SetStateAction, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  MouseEvent,
+  SetStateAction,
+  useState,
+} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { IBooking } from "../models/IBooking";
 import { Button, Modal } from "react-bootstrap";
 import { CreateCustomer } from "../components/CreateCustomer";
+import { Customer } from "../models/Customer";
 
 export const Booking = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [people, setPeople] = useState<number>(1);
-  let [selectedTime, setSelSelectedTime] = useState('')
+  let [selectedTime, setSelSelectedTime] = useState("");
 
   const [bookings, setBookings] = useState<IBooking[]>();
   const [counter1, setCounter1] = useState(1); // varför går det bara när vi börjar på 1? <----
   const [counter2, setCounter2] = useState(1);
 
   const [display, setDisplay] = useState(true);
+
+  const [customer, setCustomer] = useState<Customer>();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPeople(parseInt(e.target.value));
@@ -38,7 +47,6 @@ export const Booking = () => {
    * när den mappat alla tider checkar coundern av om den är < eller > än 6.
    * Är den mindre visas två knappar som aktiva annars inaktiva och en alter med fullbokat syns.
    */
-
 
   /*
     skapa en bokning
@@ -81,23 +89,37 @@ export const Booking = () => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
+
   const handleClickTimeBtn1 = () => {
     setShow(true);
     selectedTime = "18:00";
-    console.log(selectedTime)
+    console.log(selectedTime);
 
-    return <></>;
+    // useEffect(() => {
+    //   setCustomer(new Customer(firstName, lastName, email, phone));
+    // }, [firstName, lastName, email, phone]);
+
+  //   const handleCreateCustomer = async () => {
+  //     const response = await axios.post(
+  //       "https://school-restaurant-api.azurewebsites.net/customer/create", customer
+  //     );
+  //     console.log(response.data);
+
+  //     setFirstName("");
+  //     setLastName("");
+  //     setEmail("");
+  //     setPhone("");
+  //   };
+
+  //   return <></>;
   };
 
   const CreateBooking = async () => {
-
     var bookingData = {
-      
       restaurantId: "623b85d54396b96c57bde7c3",
       date: selectedDate,
-      time: selectedTime, 
-      numberOfGuests: people
-      
+      time: selectedTime,
+      numberOfGuests: people,
     };
 
     const response = await axios.post(
@@ -106,14 +128,13 @@ export const Booking = () => {
     );
     console.log(response.data);
 
+    return <></>;
+  };
 
-    return ( 
-    <>
-    </>
-    ) 
+  function handleCreateCustomer(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    throw new Error("Function not implemented.");
   }
 
-  
   return (
     <div>
       {/* <BookingGet booking={} /> */}
@@ -164,7 +185,7 @@ export const Booking = () => {
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary">
-                Confirm
+                Book
               </Button>
               <Button variant="secondary" onClick={handleClose}>
                 Close
@@ -176,3 +197,4 @@ export const Booking = () => {
     </div>
   );
 };
+

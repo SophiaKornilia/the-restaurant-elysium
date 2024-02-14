@@ -3,16 +3,10 @@ import { IBooking } from "../models/IBooking";
 
 const API_BASE_URL = "https://school-restaurant-api.azurewebsites.net";
 
-export const getRestaurant = async (restaurantId: string) => {
-  const response = await axios.get(API_BASE_URL + "/restaurant/" + restaurantId);
+export const getRestaurant = async () => {
+  const response = await axios.get(API_BASE_URL + "/restaurant/65c9d9502f64dba9babc81d6");
   return response.data
 };
-
-// export const searchAvailableTables = (date: string, numberOfPeople: number) => {
-//   // Placeholder: Simulate search for available tables based on the number of people and date
-//   const availableTimes = ["18:00", "21:00"]; // Replace with actual data from the API
-//   return Promise.resolve({ data: availableTimes });
-// };
 
 export const getBooking = async (bookingId: string) => {
   const response = await axios.get(API_BASE_URL + "/booking/" + bookingId);
@@ -54,7 +48,7 @@ export const deleteBooking = async (bookingId: string) => {
 
 export const getCustomer = async (customerId: string) => {
   const response = await axios.get(
-    API_BASE_URL + "/customer/update/" + customerId
+    API_BASE_URL + "/customer/" + customerId
   );
   return response.data
 };
