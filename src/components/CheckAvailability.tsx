@@ -5,8 +5,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IBooking } from "../models/IBooking";
 import axios from "axios";
+interface ICheckAvailabilityProps {
+    itWorks: (value: boolean) => void; 
+  }
 
-export const CheckAvailability = () => {
+export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [counter1, setCounter1] = useState(1); // varför går det bara när vi börjar på 1? <----
@@ -14,6 +17,11 @@ export const CheckAvailability = () => {
   const [people, setPeople] = useState<number>(1);
   const [show, setShow] = useState(false);
   const [display, setDisplay] = useState(true);
+
+  //test//
+  // const [canBook, setCanBook] = useState(false); 
+    
+
   
   let [selectedTime, setSelectedTime] = useState("");
 
@@ -33,16 +41,22 @@ export const CheckAvailability = () => {
     );
 
     setBookings(response.data);
+    console.log(response.data);
+    
   };
 
-  searchBooking; 
+
+   
 
   const handleClick = (e: FormEvent) => {
+    searchBooking();
+
     e.preventDefault();
     console.log("handleClick");
     
     bookings?.map((aBooking) => {
-      console.log(aBooking.date);
+
+      console.log("datumet du valde var", aBooking.date);
       const formattedSelectedDate = selectedDate?.toISOString().slice(0, 10); //också kolla tiderna
       if (
         JSON.stringify(aBooking.date) === JSON.stringify(formattedSelectedDate)
@@ -56,7 +70,10 @@ export const CheckAvailability = () => {
           console.log("counter2", counter2);
         }
       } else {
-        console.log("Du kan boka");
+        console.log("Du kan boka"); 
+        props.itWorks(true)
+        console.log();
+        
       }
 
       if (counter1 >= 6 && counter2 >= 6) {
