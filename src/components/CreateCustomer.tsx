@@ -39,7 +39,7 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
     setLastName("");
     setEmail("");
     setPhone("");
-  };
+  }
 //  if (customer && !copied) {
 //     setCustomerCopy({ ...customer }); 
 //     setCopied(true);
