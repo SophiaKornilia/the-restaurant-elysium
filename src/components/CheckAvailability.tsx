@@ -15,17 +15,12 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [counter1, setCounter1] = useState(1); // varför går det bara när vi börjar på 1? <----
   const [counter2, setCounter2] = useState(1);
   const [people, setPeople] = useState<number>(1);
-  const [show, setShow] = useState(false);
   const [display, setDisplay] = useState(true);
+ 
 
   //test//
   // const [canBook, setCanBook] = useState(false); 
     
-
-  
-  let [selectedTime, setSelectedTime] = useState("");
-
-  const handleClose = () => setShow(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (people) {
@@ -44,9 +39,6 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
     console.log(response.data);
     
   };
-
-
-   
 
   const handleClick = (e: FormEvent) => {
     searchBooking();
@@ -85,12 +77,6 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
     setCounter2(1);
   };
 
-  const handleClickTimeBtn1 = () => {
-    setShow(true);
-    selectedTime = "18:00";
-    console.log(selectedTime);
-  };
-
   return (
     <div>
       <form id="form-container">
@@ -115,31 +101,6 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
         <br></br>
         <button onClick={handleClick}>Search available tables</button>
       </form>
-      <div className={display ? "display" : ""}>
-        <div className="times">
-          <h4>Pick a time</h4>
-          <button className="time-btn" onClick={handleClickTimeBtn1}>
-            18:00
-          </button>
-          <button className="time-btn">21:00</button>
-        </div>
-      </div>
-      <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Personal information</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <CreateCustomer />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary">
-            Book
-          </Button>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 };
