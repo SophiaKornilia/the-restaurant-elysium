@@ -12,8 +12,8 @@ interface ICheckAvailabilityProps {
 export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [counter1, setCounter1] = useState(1); // varför går det bara när vi börjar på 1? <----
-  const [counter2, setCounter2] = useState(1);
+  const [counter1, setCounter1] = useState(0); // varför går det bara när vi börjar på 1? <----
+  const [counter2, setCounter2] = useState(0);
   const [people, setPeople] = useState<number>(1);
   const [display, setDisplay] = useState(true);
  
@@ -68,14 +68,15 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
         
       }
 
-      if (counter1 >= 6 && counter2 >= 6) {
-        alert("Its fully booked, try another day!");
-      }
     });
-
+    
     setCounter1(1);
     setCounter2(1);
   };
+
+  if (counter1 >= 15 && counter2 >= 15) {
+    alert("Its fully booked, try another day!");
+  }
 
   return (
     <div>

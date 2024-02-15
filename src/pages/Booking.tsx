@@ -30,8 +30,8 @@ export const Booking = () => {
 
   // Säkerställa kopia
   const logCopy = () => {
-    console.log(bookingCustomer)
-  }
+    console.log(bookingCustomer);
+  };
 
   return (
     <div>
@@ -59,7 +59,7 @@ export const Booking = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    <button onClick={logCopy}>Logga kopia</button>
+      <button onClick={logCopy}>Logga kopia</button>
     </div>
   );
 };
