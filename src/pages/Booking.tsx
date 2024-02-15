@@ -1,21 +1,39 @@
 import { useState } from "react";
 import { CheckAvailability } from "../components/CheckAvailability";
 import { Customer } from "../models/Customer";
-import axios from "axios";
-import { CreateBooking } from "../components/CreateBooking";
 import { CreateCustomer } from "../components/CreateCustomer";
 import { Modal, Button } from "react-bootstrap";
+import { CreateBooking } from "../components/CreateBooking";
 
 export const Booking = () => {
   const [itWorks, setItWorks] = useState(false);
   console.log(itWorks);
 
   // const [customerCopy, setCustomerCopy] = useState<Customer>();
-
-  const [bookingCustomer, setBookingCustomer] = useState<Customer | null>(null);
+  const [selectedTime, setSelectedTime] = useState("");
+  const [bookingCustomer, setBookingCustomer] = useState<Customer>({
+    name: "",
+    lastname: "",
+    email: "",
+    phone: ""
+  });
+  const [selectedDateCopy, setSelectedDateCopy] = useState<Date>(new Date());
+  const [peopleCopy, setPeopleCopy] = useState<number>(1);
 
   const handleCustomerCreated = (customer: Customer) => {
-    setBookingCustomer(customer);
+    if (!customer) {
+      console.log("No customer information available");
+    } else {
+      setBookingCustomer(customer);
+    }
+  };
+
+  const handleSelectedDate = (date: Date) => {
+    setSelectedDateCopy(date);
+  };
+
+  const handlePeopleCopy = (people: number) => {
+    setPeopleCopy(people);
   };
 
   const handleClickTimeBtn1 = () => {
@@ -24,25 +42,38 @@ export const Booking = () => {
     console.log(selectedTime);
   };
 
+  const handleClickTimeBtn2 = () => {
+    setShow(true);
+    setSelectedTime("21:00");
+    console.log(selectedTime);
+  };
+
   const handleClose = () => setShow(false);
   const [show, setShow] = useState(false);
-  let [selectedTime, setSelectedTime] = useState("");
 
   // Säkerställa kopia
   const logCopy = () => {
     console.log(bookingCustomer);
+    console.log(selectedDateCopy);
+    console.log(peopleCopy);
   };
 
   return (
     <div>
-      <CheckAvailability itWorks={setItWorks} />
+      <CheckAvailability
+        itWorks={setItWorks}
+        chosenDate={handleSelectedDate}
+        peopleAmount={handlePeopleCopy}
+      />
       <div>
         <div className="times">
           <h4>Pick a time</h4>
           <button className="time-btn" onClick={handleClickTimeBtn1}>
             18:00
           </button>
-          <button className="time-btn">21:00</button>
+          <button className="time-btn" onClick={handleClickTimeBtn2}>
+            21:00
+          </button>
         </div>
       </div>
       <Modal show={show} onHide={handleClose} centered>
@@ -51,6 +82,12 @@ export const Booking = () => {
         </Modal.Header>
         <Modal.Body>
           <CreateCustomer onCustomerCreated={handleCustomerCreated} />
+          <CreateBooking
+            chosenTime={selectedTime}
+            chosenDate={selectedDateCopy}
+            peopleAmount={peopleCopy}
+            customer={bookingCustomer}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary">Book</Button>

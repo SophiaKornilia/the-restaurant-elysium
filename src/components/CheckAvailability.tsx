@@ -1,17 +1,17 @@
 import { ChangeEvent, FormEvent, SetStateAction, useState } from "react";
-import { Modal, Button } from "react-bootstrap";
-import { CreateCustomer } from "./CreateCustomer";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IBooking } from "../models/IBooking";
 import axios from "axios";
 interface ICheckAvailabilityProps {
     itWorks: (value: boolean) => void; 
+    chosenDate : (selectedDate : Date) => void
+    peopleAmount : (people : number) => void
   }
 
 export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null); //flytta till booking
   const [counter1, setCounter1] = useState(0); // varför går det bara när vi börjar på 1? <----
   const [counter2, setCounter2] = useState(0);
   const [people, setPeople] = useState<number>(1);
