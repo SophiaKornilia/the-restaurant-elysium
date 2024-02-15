@@ -6,6 +6,7 @@ import { Menu } from "./pages/Menu";
 import { AdminPage } from "./pages/AdminPage";
 import { NotFound } from "./pages/NotFound";
 import { Layout } from "./pages/Layout";
+import { Test } from "./pages/Test";
 
 export const router = createBrowserRouter([
     {
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
             {
                 path: '/booking',
                 element: <Booking />,
+            },
+            {
+                path: '/test',
+                element: <Test />
             }
         ]
     },

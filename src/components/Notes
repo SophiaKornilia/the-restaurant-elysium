@@ -10,3 +10,7 @@
  * 8. kunna lägga till en bokning. 
  * 9. 
  */
+
+/** Skicka infromation från en children component till en annan children component (createCustomer till Create booking
+ * Lifting state up till booking (från CreateCustomer) och sedan använda props för att skicka den informationen till CreateBooking.
+ */

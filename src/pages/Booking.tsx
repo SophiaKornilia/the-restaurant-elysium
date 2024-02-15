@@ -1,20 +1,68 @@
-import { useState } from "react"
-import { CheckAvailability } from "../components/CheckAvailability"
+import { useState } from "react";
+import { CheckAvailability } from "../components/CheckAvailability";
+import { Customer } from "../models/Customer";
+import axios from "axios";
+import { CreateBooking } from "../components/CreateBooking";
+import { CreateCustomer } from "../components/CreateCustomer";
+import { Modal, Button } from "react-bootstrap";
 
 export const Booking = () => {
   const [itWorks, setItWorks] = useState(false);
   console.log(itWorks);
-  
+
+  // const [customerCopy, setCustomerCopy] = useState<Customer>();
+
+  const [bookingCustomer, setBookingCustomer] = useState<Customer | null>(null);
+
+  const handleCustomerCreated = (customer: Customer) => {
+    setBookingCustomer(customer);
+  };
+
+  const handleClickTimeBtn1 = () => {
+    setShow(true);
+    setSelectedTime("18:00");
+    console.log(selectedTime);
+  };
+
+  const handleClose = () => setShow(false);
+  const [show, setShow] = useState(false);
+  let [selectedTime, setSelectedTime] = useState("");
+
+  // Säkerställa kopia
+  const logCopy = () => {
+    console.log(bookingCustomer)
+  }
+
   return (
-    <CheckAvailability itWorks={setItWorks} /> 
-    
-  )
-}
-
-
-
-// import axios from "axios";
-// import {
+    <div>
+      <CheckAvailability itWorks={setItWorks} />
+      <div>
+        <div className="times">
+          <h4>Pick a time</h4>
+          <button className="time-btn" onClick={handleClickTimeBtn1}>
+            18:00
+          </button>
+          <button className="time-btn">21:00</button>
+        </div>
+      </div>
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Personal information</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <CreateCustomer onCustomerCreated={handleCustomerCreated} />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary">Book</Button>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    <button onClick={logCopy}>Logga kopia</button>
+    </div>
+  );
+};
 
 //   MouseEvent,
 
@@ -23,13 +71,10 @@ export const Booking = () => {
 
 // import "react-datepicker/dist/react-datepicker.css";
 
-
-
 // import { Customer } from "../models/Customer";
 
 // export const Booking = () => {
 //   const [customer, setCustomer] = useState<Customer>();
-
 
 //   // const searchBooking = async () => {
 //   //   const response = await axios.get<IBooking[]>(
@@ -52,13 +97,9 @@ export const Booking = () => {
 //     skapa en bokning
 //     utifrån bokningen ta dess värde och skapa kunden.
 //     När man trycker på "create" så skapas först en bokning och sedan en kund i samma handleClick
-//     kunden ser sedan att boknigen är slutförd och dess id för att kunna avboka och ändra. 
-  
+//     kunden ser sedan att boknigen är slutförd och dess id för att kunna avboka och ändra.
+
 //   **/
-
- 
-
-  
 
 //     // useEffect(() => {
 //     //   setCustomer(new Customer(firstName, lastName, email, phone));
@@ -108,9 +149,8 @@ export const Booking = () => {
 //           <h2>Book</h2>
 //           <p>your experience</p>
 //         </div>
-       
+
 //       </div>
 //     </div>
 //   );
 // };
-

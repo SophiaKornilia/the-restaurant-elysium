@@ -8,14 +8,14 @@ export const getRestaurant = async () => {
   return response.data
 };
 
-export const getBooking = async (bookingId: string) => {
-  const response = await axios.get(API_BASE_URL + "/booking/" + bookingId);
+export const getBooking = async (customerId: string) => {
+  const response = await axios.get(API_BASE_URL + "/booking/" + customerId);
   return response.data
 };
 
-export const getRestaurantBookings = async (restaurantId: string) => {
+export const getRestaurantBookings = async () => {
   const response = await axios.get(
-    API_BASE_URL + "/booking/restaurant/" + restaurantId
+    API_BASE_URL + "/booking/restaurant/65c9d9502f64dba9babc81d6"
   );
   return response.data
 };
