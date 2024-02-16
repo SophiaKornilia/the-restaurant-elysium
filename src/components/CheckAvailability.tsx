@@ -17,7 +17,7 @@ interface ICheckAvailabilityProps {
 
 export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null); //flytta till booking
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null); 
   const [counter1, setCounter1] = useState(0); // varför går det bara när vi börjar på 1? <----
   const [counter2, setCounter2] = useState(0);
   const [people, setPeople] = useState<number>(1);
@@ -26,52 +26,76 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   //test//
   // const [canBook, setCanBook] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (people) {
-      setDisplay(!display);
-    }
-    setPeople(parseInt(e.target.value));
-    console.log(e.target.value);
-  };
-
   const searchBooking = async () => {
     const response = await axios.get<IBooking[]>(
       "https://school-restaurant-api.azurewebsites.net/booking/restaurant/65c9d9502f64dba9babc81d6"
     );
 
     setBookings(response.data);
-    console.log(response.data);
+  
+    // console.log(response.data);
+  };
+  
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // if (people) {
+    //   setDisplay(!display);
+    // }
+    setPeople(parseInt(e.target.value));
+    console.log(e.target.value); 
+
+    
   };
 
-  const handleClick = (e: FormEvent) => {
-    searchBooking();
+  const handleDateChange = (date: SetStateAction<Date | null>) => {
+    setSelectedDate(date)
+    searchBooking(); 
+  }
+
+  // Detta gör att tidzonenr är rätt
+  // const handleDateChange = (date: Date | null) => {
+  //   setSelectedDate(date);
+  //   if (date) {
+  //     const timezoneOffset = date.getTimezoneOffset();
+  //     const adjustedDate = new Date(date.getTime() + timezoneOffset * 60000);
+  //     setSelectedDate(adjustedDate);
+  //   }
+  // };
+
+
+  console.log("uppdaterat datum", selectedDate); 
+
+  const handleClick = async (e: FormEvent) => {
 
     e.preventDefault();
     console.log("handleClick");
 
+
     bookings?.map((aBooking) => {
-      console.log("datumet du valde var", aBooking.date);
-      const formattedSelectedDate = selectedDate?.toISOString().slice(0, 10); //också kolla tiderna
+      console.log("datumet du valde var");
+      // const formattedSelectedDate = selectedDate?.toISOString().slice(0, 10); //också kolla tiderna
+      
       if (
-        JSON.stringify(aBooking.date) === JSON.stringify(formattedSelectedDate)
-      ) {
+        JSON.stringify(aBooking.date) == JSON.stringify(selectedDate)
+        
+        ) {
+        console.log(selectedDate);
         console.log("Vi måste kolla bokningar");
 
-        if (aBooking.time === "18:00") {
-          console.log("bokning 18");
+        // if (aBooking.time === "18:00") {
+        //   console.log("bokning 18");
 
-          setCounter1(counter1 + 1); // uppdateras en efter <---
-          console.log("counter1", counter1);
-        } else if (aBooking.time === "21:00") {
-          console.log("bokning 21");
+        //   setCounter1(counter1 + 1); // uppdateras en efter <---
+        //   console.log("counter1", counter1);
+        // } else if (aBooking.time === "21:00") {
+        //   console.log("bokning 21");
 
-          setCounter1(counter2 + 1);
-          console.log("counter2", counter2);
-        }
+        //   setCounter1(counter2 + 1);
+        //   console.log("counter2", counter2);
+        // }
       } else {
         console.log("Du kan boka");
         props.itWorks(true);
-        console.log();
+      
       }
     });
 
@@ -82,19 +106,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   if (counter1 >= 15 && counter2 >= 15) {
     alert("Its fully booked, try another day!");
   }
-// Detta gör att tidzonenr är rätt
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-    if (date) {
-      const timezoneOffset = date.getTimezoneOffset();
-      const adjustedDate = new Date(date.getTime() + timezoneOffset * 60000);
-      setSelectedDate(adjustedDate);
-    }
-  };
 
-  useEffect(() => {}, [selectedDate]); // Detta gör att selectedDate håller sig uppdaterat.
-
-  console.log(selectedDate);
 
   const maxDate = new Date();
   maxDate.setDate(maxDate.getDate() + 28);
@@ -121,6 +133,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
         ></DatePicker>
         <br></br>
         <button onClick={handleClick}>Search available tables</button>
+
       </form>
     </div>
   );
