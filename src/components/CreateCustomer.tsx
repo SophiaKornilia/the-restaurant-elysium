@@ -13,38 +13,36 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
-  const [customer, setCustomer] = useState<Customer>()
+  const [customer, setCustomer] = useState<Customer>();
 
   // const [customerCopy, setCustomerCopy] = useState<Customer>(); //skicka till booking
- 
-
 
   console.log(customer);
 
   useEffect(() => {
     setCustomer(new Customer(firstName, lastName, email, phone));
-  }, [firstName, lastName, email, phone]); 
+  }, [firstName, lastName, email, phone]);
 
   const handleClick = async () => {
-    if (customer) { // Kontrollera om customer inte är undefined
+    if (customer) {
+      // Kontrollera om customer inte är undefined
       const response = await axios.post(
         "https://school-restaurant-api.azurewebsites.net/customer/create",
         customer
       );
-    console.log(response.data);
+      console.log(response.data);
 
-    props.onCustomerCreated(customer);
+      props.onCustomerCreated(customer);
 
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPhone("");
-  }
-//  if (customer && !copied) {
-//     setCustomerCopy({ ...customer }); 
-//     setCopied(true);
-  }
-
+      // setFirstName("");
+      // setLastName("");
+      // setEmail("");
+      // setPhone("");
+    }
+    //  if (customer && !copied) {
+    //     setCustomerCopy({ ...customer });
+    //     setCopied(true);
+  };
 
   // console.log(props.customerCopy);
 
