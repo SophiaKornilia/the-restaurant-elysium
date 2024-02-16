@@ -46,9 +46,9 @@ export const deleteBooking = async (bookingId: string) => {
   return response.data
 };
 
-export const getCustomer = async (customerId: string) => {
+export const getCustomer = async (inputValue: string) => {
   const response = await axios.get(
-    API_BASE_URL + "/customer/" + customerId
+    API_BASE_URL + "/customer/" + inputValue
   );
   return response.data
 };
@@ -61,9 +61,9 @@ export const createCustomer = async (customerData: any) => {
   return response.data
 };
 
-export const updateCustomer = async (customerId: string, updateData: any) => {
+export const updateCustomer = async (inputValue: string, updateData: any) => {
   const response = await axios.put(
-    API_BASE_URL + "/customer/update/" + customerId,
+    API_BASE_URL + "/customer/update/" + inputValue,
     updateData
   );
   return response.data
