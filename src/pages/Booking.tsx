@@ -66,7 +66,7 @@ export const Booking = () => {
         peopleAmount={handlePeopleCopy}
       />
       <div>
-        <div className="times">
+        {/* <div className="times">
           <h4>Pick a time</h4>
           <button className="time-btn" onClick={handleClickTimeBtn1}>
             18:00
@@ -74,7 +74,7 @@ export const Booking = () => {
           <button className="time-btn" onClick={handleClickTimeBtn2}>
             21:00
           </button>
-        </div>
+        </div> */}
       </div>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
