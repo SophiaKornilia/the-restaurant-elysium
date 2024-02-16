@@ -1,7 +1,12 @@
 import facebookLogo from "../images/Facebook.png";
 import instagramLogo from "../images/Instagram.png";
 import tripAdvisor from "../images/TripAdvisor.png";
+import { LoginAdmin } from "./LoginAdmin";
+
+
 export const Footer = () => {
+
+
   return (<>
       <div id="text-container">
         <div>
@@ -30,6 +35,7 @@ export const Footer = () => {
           {" "}
           <img src={tripAdvisor} alt="tripadvisor" />
         </div>
+       <LoginAdmin/>
       </div>
   </>);
 };
