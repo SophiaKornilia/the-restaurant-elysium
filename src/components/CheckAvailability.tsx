@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, SetStateAction, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, SetStateAction, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IBooking } from "../models/IBooking";
@@ -105,13 +105,13 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
 
   const handleClickTimeBtn1 = () => {
     setTime("18:00");
-    props.time("18:00")
+    props.time("18:00");
     props.setShowModal(true);
   };
-  
+
   const handleClickTimeBtn2 = () => {
     setTime("21:00");
-    props.time("21:00")
+    props.time("21:00");
     props.setShowModal(true);
   };
   console.log(time);

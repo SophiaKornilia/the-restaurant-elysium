@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Customer } from "../models/Customer";
+import { useState } from "react";
 
 interface ICreateBookingProps {
   chosenTime: string;
@@ -18,6 +19,7 @@ export const CreateBooking = (props: ICreateBookingProps) => {
   console.log(props.peopleAmount);
 
   const formatedChosenDate = props.chosenDate?.toISOString().slice(0, 10);
+  const [isButtonClicked, setIsButtonClicked] = useState(true); 
 
   console.log(formatedChosenDate);
 
@@ -45,42 +47,21 @@ export const CreateBooking = (props: ICreateBookingProps) => {
 
       console.log(response);
     }
+    setIsButtonClicked(false);
   };
   return (
-    <div>
-      <button onClick={handleClick}>Confirm</button>
+    <div className={isButtonClicked ? "" : "display"}>
       {bookingData && (
         <div>
-          <h4>Date and time: {bookingData.time}</h4>
+          <h3>{bookingData.customer.name}", press confirm to confirm your booking."</h3>
+          <h4>Date: {bookingData.date}</h4>
+          <h4>Time: {bookingData.time}</h4>
+          <button onClick={handleClick} >Confirm</button>
         </div>
       )}
+    <div className={isButtonClicked ? "display" : ""}>
+      <h3>"You have booked a table at Elysium {bookingData.date} on {bookingData.time} for {bookingData.numberOfGuests} people.</h3>
+    </div> 
     </div>
   );
 };
-
-//     const response = await axios.post(
-//       "https://school-restaurant-api.azurewebsites.net/booking/create",
-//       bookingData
-//     );
-//     console.log(response.data);
-
-//     return <></>;
-//   };
-
-//   function handleCreateCustomer(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
-//     throw new Error("Function not implemented.");
-//   }
-
-//   return (
-//     <div>
-//       {/* <BookingGet booking={} /> */}
-//       <div id="container">
-//         <div id="text-container">
-//           <h2>Book</h2>
-//           <p>your experience</p>
-//         </div>
-
-//       </div>
-//     </div>
-//   );
-// };
