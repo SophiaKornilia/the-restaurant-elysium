@@ -24,15 +24,12 @@ export const Footer = () => {
       </div>
       <div id="icon-container">
         <div>
-          {" "}
           <img src={facebookLogo} alt="facebook" />
         </div>
         <div>
-          {" "}
           <img src={instagramLogo} alt="instagram" />
         </div>
         <div>
-          {" "}
           <img src={tripAdvisor} alt="tripadvisor" />
         </div>
        <LoginAdmin/>
