@@ -1,17 +1,11 @@
-import {
-  ChangeEvent,
-  FormEvent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, FormEvent, SetStateAction, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IBooking } from "../models/IBooking";
 import axios from "axios";
 import moment from "moment-timezone";
 interface ICheckAvailabilityProps {
-  itWorks: (value: boolean) => void;
+  time: (value: string) => void;
   chosenDate: (selectedDate: Date) => void;
   peopleAmount: (people: number) => void;
 }
@@ -19,20 +13,26 @@ interface ICheckAvailabilityProps {
 export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [counter1, setCounter1] = useState(0); // varför går det bara när vi börjar på 1? <----
-  const [counter2, setCounter2] = useState(0);
+  // const [counter1, setCounter1] = useState(0); // varför går det bara när vi börjar på 1? <----
+  // const [counter2, setCounter2] = useState(0);
   const [people, setPeople] = useState<number>(1);
-  const [display, setDisplay] = useState(true);
+  const [disableBtn6, setDisabledBtn6] = useState<boolean>(false);
+  const [disableBtn9, setDisabledBtn9] = useState<boolean>(false);
+  const [showTimeBtns, setShowTimeBtns] = useState<boolean>(false);
+  const [time, setTime] = useState("");
+  console.log(time);
 
   //test//
   // const [canBook, setCanBook] = useState(false);
 
-  const searchBooking = async () => {
+  console.log(props.time);
+
+  const getRestaurantBookings = async () => {
     const response = await axios.get<IBooking[]>(
       "https://school-restaurant-api.azurewebsites.net/booking/restaurant/65c9d9502f64dba9babc81d6"
     );
 
-    setBookings(response.data);
+    return response.data;
 
     // console.log(response.data);
   };
@@ -43,22 +43,14 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
     // }
     setPeople(parseInt(e.target.value));
     console.log(e.target.value);
+    
   };
 
   const handleDateChange = (date: SetStateAction<Date | null>) => {
     setSelectedDate(date);
-    searchBooking();
+    setDisabledBtn6(false);
+    setDisabledBtn9(false);
   };
-
-  // Detta gör att tidzonenr är rätt
-  // const handleDateChange = (date: Date | null) => {
-  //   setSelectedDate(date);
-  //   if (date) {
-  //     const timezoneOffset = date.getTimezoneOffset();
-  //     const adjustedDate = new Date(date.getTime() + timezoneOffset * 60000);
-  //     setSelectedDate(adjustedDate);
-  //   }
-  // };
 
   console.log("uppdaterat datum", selectedDate);
 
@@ -67,46 +59,71 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
     console.log("handleClick");
 
     const timezone: string = "Europe/Stockholm";
+    const formattedSelectedDate: string = moment(selectedDate)
+      .tz(timezone)
+      .format("YYYY-MM-DD");
 
     bookings?.map((aBooking) => {
-      const formattedSelectedDate: string = moment(selectedDate)
-        .tz(timezone)
-        .format("YYYY-MM-DD");
-      // const formattedSelectedDate = selectedDate?.toISOString().slice(0, 10); //också kolla tiderna
       console.log(aBooking.date, formattedSelectedDate);
-      // const formattedSelectedDate = selectedDate?.toDateString();
       console.log("formaterad", formattedSelectedDate);
-
-      if (
-        (aBooking.date) === (formattedSelectedDate)
-      ) {
-        console.log(selectedDate);
-        console.log("Vi måste kolla bokningar");
-
-        // if (aBooking.time === "18:00") {
-        //   console.log("bokning 18");
-
-        //   setCounter1(counter1 + 1); // uppdateras en efter <---
-        //   console.log("counter1", counter1);
-        // } else if (aBooking.time === "21:00") {
-        //   console.log("bokning 21");
-
-        //   setCounter1(counter2 + 1);
-        //   console.log("counter2", counter2);
-        // }
-      } else {
-        console.log("Du kan boka");
-        props.itWorks(true);
-      }
     });
 
-    setCounter1(1);
-    setCounter2(1);
+    // hanterar sökningen efter lediga bord
+    if (formattedSelectedDate === "" || people === undefined) {
+      alert("Please select a date and number of guests");
+    } else {
+      // hämta alla bokningar restaurangen har och filtrera fram de med samma datum
+      const totalBookings = await getRestaurantBookings();
+      setBookings(totalBookings);
+      console.log(totalBookings);
+
+      const result = totalBookings.filter(
+        (booking: IBooking) => booking.date === formattedSelectedDate
+      );
+      console.log(result);
+
+      const tablesBooked6 = result.filter(
+        (booking: IBooking) => booking.time === "18:00"
+      );
+      const tablesBooked9 = result.filter(
+        (booking: IBooking) => booking.time === "21:00"
+      );
+
+      if (tablesBooked6.length >= 15) {
+        setDisabledBtn6(true);
+      }
+
+      if (tablesBooked9.length >= 15) {
+        setDisabledBtn9(true);
+      }
+
+      if (result.length > 30) {
+        alert("Fully booked");
+        setShowTimeBtns(false);
+      } else {
+        setShowTimeBtns(true);
+      }
+    }
   };
 
-  if (counter1 >= 15 && counter2 >= 15) {
-    alert("Its fully booked, try another day!");
-  }
+  const handleClickTimeBtn1 = () => {
+    setTime("18:00");
+  };
+
+  const handleClickTimeBtn2 = () => {
+    setTime("21:00");
+  };
+
+  // if (counter1 >= 15 && counter2 >= 15) {
+  //   alert("Its fully booked, try another day!");
+  // }
+
+  // export const getRestaurantBookings = async () => {
+  //   const response = await axios.get(
+  //     API_BASE_URL + "/booking/restaurant/65c9d9502f64dba9babc81d6"
+  //   );
+  //   return response.data
+  // };
 
   const maxDate = new Date();
   maxDate.setDate(maxDate.getDate() + 28);
@@ -134,6 +151,23 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
         <br></br>
         <button onClick={handleSearchClick}>Search available tables</button>
       </form>
+      <div className={!showTimeBtns ? "time-btns display" : "time-btns"}>
+        <h4>Pick a time</h4>
+        <button
+          disabled={disableBtn6}
+          className="time-btn"
+          onClick={handleClickTimeBtn1}
+        >
+          18:00
+        </button>
+        <button
+          disabled={disableBtn9}
+          className="time-btn"
+          onClick={handleClickTimeBtn2}
+        >
+          21:00
+        </button>
+      </div>
     </div>
   );
 };

@@ -6,11 +6,10 @@ import { Modal, Button } from "react-bootstrap";
 import { CreateBooking } from "../components/CreateBooking";
 
 export const Booking = () => {
-  const [itWorks, setItWorks] = useState(false);
-  console.log(itWorks);
+ 
 
   // const [customerCopy, setCustomerCopy] = useState<Customer>();
-  const [selectedTime, setSelectedTime] = useState("");
+  // const [selectedTime, setSelectedTime] = useState("");
   const [bookingCustomer, setBookingCustomer] = useState<Customer>({
     name: "",
     lastname: "",
@@ -19,6 +18,7 @@ export const Booking = () => {
   });
   const [selectedDateCopy, setSelectedDateCopy] = useState<Date>(new Date());
   const [peopleCopy, setPeopleCopy] = useState<number>(1);
+  const [timeCopy, setTimeCopy] = useState("");
 
   const handleCustomerCreated = (customer: Customer) => {
     if (!customer) {
@@ -36,17 +36,21 @@ export const Booking = () => {
     setPeopleCopy(people);
   };
 
-  const handleClickTimeBtn1 = () => {
-    setShow(true);
-    setSelectedTime("18:00");
-    console.log(selectedTime);
+  const handleTimeCopy = (time: string) => {
+    setTimeCopy(time);
   };
 
-  const handleClickTimeBtn2 = () => {
-    setShow(true);
-    setSelectedTime("21:00");
-    console.log(selectedTime);
-  };
+  // const handleClickTimeBtn1 = () => {
+  //   setShow(true);
+  //   setSelectedTime("18:00");
+  //   console.log(selectedTime);
+  // };
+
+  // const handleClickTimeBtn2 = () => {
+  //   setShow(true);
+  //   setSelectedTime("21:00");
+  //   console.log(selectedTime);
+  // };
 
   const handleClose = () => setShow(false);
   const [show, setShow] = useState(false);
@@ -56,12 +60,30 @@ export const Booking = () => {
     console.log(bookingCustomer);
     console.log(selectedDateCopy);
     console.log(peopleCopy);
+    console.log(timeCopy);
+    
   };
+
+  // const ifItWorksIsTrue = () => {
+  //   if(itWorks === true) {
+  //     return (
+  //       <div className="times">
+  //       <h4>Pick a time</h4>
+  //       <button className="time-btn" onClick={handleClickTimeBtn1}>
+  //         18:00
+  //       </button>
+  //       <button className="time-btn" onClick={handleClickTimeBtn2}>
+  //         21:00
+  //       </button>
+  //     </div>
+  //     )
+  //   } 
+  // }
 
   return (
     <div>
       <CheckAvailability
-        itWorks={setItWorks}
+        time={handleTimeCopy}
         chosenDate={handleSelectedDate}
         peopleAmount={handlePeopleCopy}
       />
@@ -83,7 +105,7 @@ export const Booking = () => {
         <Modal.Body>
           <CreateCustomer onCustomerCreated={handleCustomerCreated} />
           <CreateBooking
-            chosenTime={selectedTime}
+            chosenTime={timeCopy}
             chosenDate={selectedDateCopy}
             peopleAmount={peopleCopy}
             customer={bookingCustomer}
