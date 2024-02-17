@@ -1,25 +1,54 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Customer } from "../models/Customer";
 
-interface IEditCustomer {
+interface IEditCustomerProps {
   customerData: Customer[];
-  newCustomerData: (updateData: Customer) => void;
+  handleSave: () => void;
+  inputValue: string;
 }
 
-export const EditCustomer = (props: IEditCustomer) => {
-  const { customerData } = props; 
-//   ????
+export const EditCustomer = ({ customerData, handleSave, inputValue }: IEditCustomerProps) => {
 
-  const initialValues = {
-    name: customerData[0].name || "",
-    lastname: customerData[0].lastname || "",
-    email: customerData[0].email || "",
-    phone: customerData[0].phone || "",
-  };
+  const [newName, seNewName] = useState("");
+  const [newLastname, setNewLastname] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPhone, setNewPhone] = useState("");
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const [values, setValues] = useState<Customer[]>([{
+    name: newName || customerData[0].name,
+      lastname: newLastname || customerData[0].lastname,
+      email: newEmail || customerData[0].email,
+      phone: newPhone || customerData[0].phone,
+  }])
+
+  useEffect(() => {
+    const newValues = {
+      name: newName || customerData[0].name,
+      lastname: newLastname || customerData[0].lastname,
+      email: newEmail || customerData[0].email,
+      phone: newPhone || customerData[0].phone,
     };
-  
+    setValues([newValues]);
+  }, [newName, newLastname, newEmail, newPhone, customerData]);
+
+  // const initialValues = {
+  //   name: customerData[0].name || "",
+  //   lastname: customerData[0].lastname || "",
+  //   email: customerData[0].email || "",
+  //   phone: customerData[0].phone || "",
+  // };
+
+  // const newValues = {
+  //   name: newName || customerData[0].name,
+  //   lastname: newLastname || customerData[0].lastname,
+  //   email: newEmail || customerData[0].email,
+  //   phone: newPhone || customerData[0].phone,
+  // };
+
+  const handleLog = () => {
+    console.log("New Values:", values[0]);
+    console.log(values);
+  };
 
   return (
     <div id="edit-container">
@@ -27,34 +56,55 @@ export const EditCustomer = (props: IEditCustomer) => {
         <label>Name:</label>
         <input
           type="text"
-          defaultValue={initialValues.name}
-          onChange={handleInputChange}
+          defaultValue={values[0].name}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            seNewName(e.target.value);
+          }}
         />
       </div>
       <div className="unit">
         <label>Lastname:</label>
         <input
           type="text"
-          defaultValue={initialValues.lastname}
-          onChange={handleInputChange}
+          defaultValue={values[0].lastname}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            setNewLastname(e.target.value);
+          }}
         />
       </div>
       <div className="unit">
         <label>Email:</label>
         <input
           type="text"
-          defaultValue={initialValues.email}
-          onChange={handleInputChange}
+          defaultValue={values[0].email}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            setNewEmail(e.target.value);
+          }}
         />
       </div>
       <div className="unit">
         <label>Phone:</label>
         <input
           type="text"
-          defaultValue={initialValues.phone}
-          onChange={handleInputChange}
+          defaultValue={values[0].phone}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            setNewPhone(e.target.value);
+          }}
         />
       </div>
+      <div className="unit">
+        <label>Customer ID:</label>
+        <input
+          type="text"
+          defaultValue={inputValue}
+          disabled
+        />
+      </div>
+      <button
+        onClick={handleLog}
+      >
+        Save
+      </button>
     </div>
   );
 };
@@ -66,3 +116,13 @@ export const EditCustomer = (props: IEditCustomer) => {
 //     "email": "someone@somedomain.com",
 //     "phone": "070-1112233"
 //   }
+
+// if(newName === customerData[0].name) {
+//   console.log('same name')
+// } if(newLastname === customerData[0].lastname) {
+//   console.log('same lastname')
+// } if(newEmail === customerData[0].email) {
+//   console.log('same email')
+// } if(newPhone === customerData[0].phone) {
+//   console.log('same phone')
+// }
