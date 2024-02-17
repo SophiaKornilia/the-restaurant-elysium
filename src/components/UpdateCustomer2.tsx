@@ -10,6 +10,7 @@ import { EditCustomer } from "./EditCustomer";
 export const UpdateCustomer2 = () => {
   const [inputValue, setInputValue] = useState("");
   const [customerData, setCustomerData] = useState<Customer[]>();
+  const [show, setShow] = useState(false);
 
   const handleClick = async (inputValue: string) => {
     const customer = await getCustomer(inputValue);
@@ -21,11 +22,9 @@ export const UpdateCustomer2 = () => {
     console.log("Updated customerData:", customerData);
   }, [customerData]);
 
-
   const handleClose = () => setShow(false);
-  const [show, setShow] = useState(false);
 
-  
+
   const [updatedData, setUpdatedData] = useState<Customer>({
     name: "",
     lastname: "",
@@ -33,15 +32,17 @@ export const UpdateCustomer2 = () => {
     phone: "",
   });
 
-  const handleSave = async (inputValue: string, updateData: Customer) => {
-    const updatedData = await updateCustomer(inputValue, updateData);
-    console.log("Updated Data:", updatedData);
+  const handleSave = async () => {
+    const updatedCustomer = await updateCustomer(inputValue, updatedData);
+    console.log("Updated Data:", updatedCustomer);
     handleClose();
+    console.log(inputValue)
+    console.log(customerData)
   };
 
-  const updateToNewData = (updatedData: Customer) => {
-    setUpdatedData(updatedData);
-  };
+  // const updateToNewData = (updatedData: Customer) => {
+  //   setUpdatedData(updatedData);
+  // };
 
   return (
     <>
@@ -83,15 +84,14 @@ export const UpdateCustomer2 = () => {
         <Modal.Body>
           <EditCustomer
             customerData={customerData || []}
-            newCustomerData={updateToNewData}
+            handleSave={handleSave}
+            inputValue={inputValue}
           />
         </Modal.Body>
         <Modal.Footer>
           <Button
             variant="secondary"
-            onClick={() => {
-              handleSave(inputValue, updatedData);
-            }}
+            onClick={handleSave}
           >
             Save
           </Button>
