@@ -12,6 +12,7 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const [customer, setCustomer] = useState<Customer>();
 
@@ -24,7 +25,6 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
   }, [firstName, lastName, email, phone]);
 
   const handleClick = async () => {
-    
     if (customer) {
       // Kontrollera om customer inte är undefined
       const response = await axios.post(
@@ -34,15 +34,16 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
       console.log(response.data);
 
       props.onCustomerCreated(customer);
+
+      setIsButtonClicked(true);
     }
-  
   };
 
   // console.log(props.customerCopy);
 
   return (
     <>
-      <div>
+      <div className={isButtonClicked ? "display" : ""}>
         <div>
           <input
             type="text"
