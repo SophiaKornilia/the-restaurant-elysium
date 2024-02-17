@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, SetStateAction, useState } from "react";
+import { ChangeEvent, FormEvent, SetStateAction, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IBooking } from "../models/IBooking";
@@ -8,6 +8,7 @@ interface ICheckAvailabilityProps {
   time: (value: string) => void;
   chosenDate: (selectedDate: Date) => void;
   peopleAmount: (people: number) => void;
+  setShowModal: (value: boolean) => void;
 }
 
 export const CheckAvailability = (props: ICheckAvailabilityProps) => {
@@ -38,12 +39,8 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   };
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // if (people) {
-    //   setDisplay(!display);
-    // }
     setPeople(parseInt(e.target.value));
     console.log(e.target.value);
-    
   };
 
   const handleDateChange = (date: SetStateAction<Date | null>) => {
@@ -108,22 +105,16 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
 
   const handleClickTimeBtn1 = () => {
     setTime("18:00");
+    props.time("18:00")
+    props.setShowModal(true);
   };
-
+  
   const handleClickTimeBtn2 = () => {
     setTime("21:00");
+    props.time("21:00")
+    props.setShowModal(true);
   };
-
-  // if (counter1 >= 15 && counter2 >= 15) {
-  //   alert("Its fully booked, try another day!");
-  // }
-
-  // export const getRestaurantBookings = async () => {
-  //   const response = await axios.get(
-  //     API_BASE_URL + "/booking/restaurant/65c9d9502f64dba9babc81d6"
-  //   );
-  //   return response.data
-  // };
+  console.log(time);
 
   const maxDate = new Date();
   maxDate.setDate(maxDate.getDate() + 28);

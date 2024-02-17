@@ -24,6 +24,7 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
   }, [firstName, lastName, email, phone]);
 
   const handleClick = async () => {
+    
     if (customer) {
       // Kontrollera om customer inte är undefined
       const response = await axios.post(
@@ -33,15 +34,8 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
       console.log(response.data);
 
       props.onCustomerCreated(customer);
-
-      // setFirstName("");
-      // setLastName("");
-      // setEmail("");
-      // setPhone("");
     }
-    //  if (customer && !copied) {
-    //     setCustomerCopy({ ...customer });
-    //     setCopied(true);
+  
   };
 
   // console.log(props.customerCopy);

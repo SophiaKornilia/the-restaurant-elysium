@@ -19,6 +19,7 @@ export const Booking = () => {
   const [selectedDateCopy, setSelectedDateCopy] = useState<Date>(new Date());
   const [peopleCopy, setPeopleCopy] = useState<number>(1);
   const [timeCopy, setTimeCopy] = useState("");
+  const [show, setShow] = useState(false);
 
   const handleCustomerCreated = (customer: Customer) => {
     if (!customer) {
@@ -40,20 +41,12 @@ export const Booking = () => {
     setTimeCopy(time);
   };
 
-  // const handleClickTimeBtn1 = () => {
-  //   setShow(true);
-  //   setSelectedTime("18:00");
-  //   console.log(selectedTime);
-  // };
-
-  // const handleClickTimeBtn2 = () => {
-  //   setShow(true);
-  //   setSelectedTime("21:00");
-  //   console.log(selectedTime);
-  // };
+  const handleShowModal = () => {
+    setShow(true);
+  }
+ 
 
   const handleClose = () => setShow(false);
-  const [show, setShow] = useState(false);
 
   // Säkerställa kopia
   const logCopy = () => {
@@ -64,39 +57,15 @@ export const Booking = () => {
     
   };
 
-  // const ifItWorksIsTrue = () => {
-  //   if(itWorks === true) {
-  //     return (
-  //       <div className="times">
-  //       <h4>Pick a time</h4>
-  //       <button className="time-btn" onClick={handleClickTimeBtn1}>
-  //         18:00
-  //       </button>
-  //       <button className="time-btn" onClick={handleClickTimeBtn2}>
-  //         21:00
-  //       </button>
-  //     </div>
-  //     )
-  //   } 
-  // }
-
   return (
     <div>
       <CheckAvailability
         time={handleTimeCopy}
         chosenDate={handleSelectedDate}
         peopleAmount={handlePeopleCopy}
+        setShowModal={handleShowModal}
       />
       <div>
-        {/* <div className="times">
-          <h4>Pick a time</h4>
-          <button className="time-btn" onClick={handleClickTimeBtn1}>
-            18:00
-          </button>
-          <button className="time-btn" onClick={handleClickTimeBtn2}>
-            21:00
-          </button>
-        </div> */}
       </div>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
