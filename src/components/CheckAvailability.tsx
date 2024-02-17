@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IBooking } from "../models/IBooking";
 import axios from "axios";
+import moment from "moment-timezone";
 interface ICheckAvailabilityProps {
   itWorks: (value: boolean) => void;
   chosenDate: (selectedDate: Date) => void;
@@ -17,7 +18,7 @@ interface ICheckAvailabilityProps {
 
 export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null); 
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [counter1, setCounter1] = useState(0); // varför går det bara när vi börjar på 1? <----
   const [counter2, setCounter2] = useState(0);
   const [people, setPeople] = useState<number>(1);
@@ -32,24 +33,22 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
     );
 
     setBookings(response.data);
-  
+
     // console.log(response.data);
   };
-  
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+
+  const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     // if (people) {
     //   setDisplay(!display);
     // }
     setPeople(parseInt(e.target.value));
-    console.log(e.target.value); 
-
-    
+    console.log(e.target.value);
   };
 
   const handleDateChange = (date: SetStateAction<Date | null>) => {
-    setSelectedDate(date)
-    searchBooking(); 
-  }
+    setSelectedDate(date);
+    searchBooking();
+  };
 
   // Detta gör att tidzonenr är rätt
   // const handleDateChange = (date: Date | null) => {
@@ -61,23 +60,26 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   //   }
   // };
 
+  console.log("uppdaterat datum", selectedDate);
 
-  console.log("uppdaterat datum", selectedDate); 
-
-  const handleClick = async (e: FormEvent) => {
-
+  const handleSearchClick = async (e: FormEvent) => {
     e.preventDefault();
     console.log("handleClick");
 
+    const timezone: string = "Europe/Stockholm";
 
     bookings?.map((aBooking) => {
-      console.log("datumet du valde var");
+      const formattedSelectedDate: string = moment(selectedDate)
+        .tz(timezone)
+        .format("YYYY-MM-DD");
       // const formattedSelectedDate = selectedDate?.toISOString().slice(0, 10); //också kolla tiderna
-      
+      console.log(aBooking.date, formattedSelectedDate);
+      // const formattedSelectedDate = selectedDate?.toDateString();
+      console.log("formaterad", formattedSelectedDate);
+
       if (
-        JSON.stringify(aBooking.date) == JSON.stringify(selectedDate)
-        
-        ) {
+        (aBooking.date) === (formattedSelectedDate)
+      ) {
         console.log(selectedDate);
         console.log("Vi måste kolla bokningar");
 
@@ -95,7 +97,6 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
       } else {
         console.log("Du kan boka");
         props.itWorks(true);
-      
       }
     });
 
@@ -106,7 +107,6 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   if (counter1 >= 15 && counter2 >= 15) {
     alert("Its fully booked, try another day!");
   }
-
 
   const maxDate = new Date();
   maxDate.setDate(maxDate.getDate() + 28);
@@ -120,7 +120,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
           max={6}
           placeholder="People"
           value={people}
-          onChange={handleChange}
+          onChange={handleFormChange}
         />
         <br></br>
         <DatePicker
@@ -132,8 +132,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
           maxDate={maxDate}
         ></DatePicker>
         <br></br>
-        <button onClick={handleClick}>Search available tables</button>
-
+        <button onClick={handleSearchClick}>Search available tables</button>
       </form>
     </div>
   );
