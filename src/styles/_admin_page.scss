@@ -1,11 +1,46 @@
-#edit-container {
+.main {
+  padding: 20px;
+  display: flex;
+  justify-content: space-evenly;
+  .calendar-container {
     display: flex;
     flex-direction: column;
-    
-    .unit {
-        margin: 10px;
-        label {
-            width: 20%;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding: 10px;
+    height: 40vh;
+    background-color: gainsboro;
+  }
+  .booking-list {
+    width: 75%;
+    border: 2px solid black;
+    ul {
+      margin: 0px;
+      list-style: none;
+      padding: 0px;
+      li {
+        border: 1px solid gainsboro;
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+        .btn-container {
+          width: 20%;
+          display: flex;
+          justify-content: space-evenly;
         }
+      }
     }
+  }
+}
+
+#edit-container {
+  display: flex;
+  flex-direction: column;
+
+  .unit {
+    margin: 10px;
+    label {
+      width: 20%;
+    }
+  }
 }
