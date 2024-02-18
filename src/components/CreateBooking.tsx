@@ -4,7 +4,7 @@ import { useState } from "react";
 
 interface ICreateBookingProps {
   chosenTime: string;
-  chosenDate: Date;
+  chosenDate: string;
   peopleAmount: number;
   customer: Customer;
 }
@@ -18,14 +18,14 @@ export const CreateBooking = (props: ICreateBookingProps) => {
   console.log(props.chosenTime);
   console.log(props.peopleAmount);
 
-  const formatedChosenDate = props.chosenDate?.toISOString().slice(0, 10);
-  const [isButtonClicked, setIsButtonClicked] = useState(true); 
+  // const formatedChosenDate = props.chosenDate?.toISOString().slice(0, 10);
+  const [isButtonClicked, setIsButtonClicked] = useState(true);
 
-  console.log(formatedChosenDate);
+  console.log("är det rätt datum", props.chosenDate);
 
   const bookingData = {
-    restaurantId: "623b85d54396b96c57bde7c3",
-    date: formatedChosenDate,
+    restaurantId: "65c9d9502f64dba9babc81d6",
+    date: props.chosenDate,
     time: props.chosenTime,
     numberOfGuests: props.peopleAmount,
     customer: {
@@ -53,15 +53,21 @@ export const CreateBooking = (props: ICreateBookingProps) => {
     <div className={isButtonClicked ? "" : "display"}>
       {bookingData && (
         <div>
-          <h3>{bookingData.customer.name}", press confirm to confirm your booking."</h3>
+          <h3>
+            {bookingData.customer.name}", press confirm to confirm your
+            booking."
+          </h3>
           <h4>Date: {bookingData.date}</h4>
           <h4>Time: {bookingData.time}</h4>
-          <button onClick={handleClick} >Confirm</button>
+          <button onClick={handleClick}>Confirm</button>
         </div>
       )}
-    <div className={isButtonClicked ? "display" : ""}>
-      <h3>"You have booked a table at Elysium {bookingData.date} on {bookingData.time} for {bookingData.numberOfGuests} people.</h3>
-    </div> 
+      <div className={isButtonClicked ? "display" : ""}>
+        <h3>
+          "You have booked a table at Elysium {bookingData.date} on{" "}
+          {bookingData.time} for {bookingData.numberOfGuests} people.
+        </h3>
+      </div>
     </div>
   );
 };

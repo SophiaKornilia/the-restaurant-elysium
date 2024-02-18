@@ -16,7 +16,7 @@ export const Booking = () => {
     email: "",
     phone: ""
   });
-  const [selectedDateCopy, setSelectedDateCopy] = useState<Date>(new Date());
+  const [selectedDateCopy, setSelectedDateCopy] = useState<string>("");
   const [peopleCopy, setPeopleCopy] = useState<number>(1);
   const [timeCopy, setTimeCopy] = useState("");
   const [show, setShow] = useState(false);
@@ -29,8 +29,8 @@ export const Booking = () => {
     }
   };
 
-  const handleSelectedDate = (date: Date) => {
-    setSelectedDateCopy(date);
+  const handleSelectedDate = (formatedDate: string) => {
+    setSelectedDateCopy(formatedDate); // det är fortfarande en tom sträng
   };
 
   const handlePeopleCopy = (people: number) => {
@@ -45,7 +45,7 @@ export const Booking = () => {
     setShow(true);
   }
  
-
+ 
   const handleClose = () => setShow(false);
 
   // Säkerställa kopia
