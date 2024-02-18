@@ -6,7 +6,7 @@ import axios from "axios";
 import moment from "moment-timezone";
 interface ICheckAvailabilityProps {
   time: (value: string) => void;
-  chosenDate: (selectedDate: Date) => void;
+  chosenDate: (formatedDate: string) => void;
   peopleAmount: (people: number) => void;
   setShowModal: (value: boolean) => void;
 }
@@ -14,12 +14,11 @@ interface ICheckAvailabilityProps {
 export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  // const [counter1, setCounter1] = useState(0); // varför går det bara när vi börjar på 1? <----
-  // const [counter2, setCounter2] = useState(0);
   const [people, setPeople] = useState<number>(1);
   const [disableBtn6, setDisabledBtn6] = useState<boolean>(false);
   const [disableBtn9, setDisabledBtn9] = useState<boolean>(false);
   const [showTimeBtns, setShowTimeBtns] = useState<boolean>(false);
+  const [formatedDate, setFormatedDate] = useState<string>(""); 
   const [time, setTime] = useState("");
   console.log(time);
 
@@ -27,6 +26,8 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   // const [canBook, setCanBook] = useState(false);
 
   console.log(props.time);
+  console.log(formatedDate);
+  
 
   const getRestaurantBookings = async () => {
     const response = await axios.get<IBooking[]>(
@@ -60,10 +61,13 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
       .tz(timezone)
       .format("YYYY-MM-DD");
 
+      console.log("formaterat datum", formattedSelectedDate);
+      setFormatedDate(formattedSelectedDate); 
+
     bookings?.map((aBooking) => {
       console.log(aBooking.date, formattedSelectedDate);
-      console.log("formaterad", formattedSelectedDate);
     });
+    
 
     // hanterar sökningen efter lediga bord
     if (formattedSelectedDate === "" || people === undefined) {
