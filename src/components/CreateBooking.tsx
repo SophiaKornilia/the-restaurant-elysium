@@ -50,7 +50,7 @@ export const CreateBooking = (props: ICreateBookingProps) => {
     setIsButtonClicked(false);
   };
   return (
-    <div className={isButtonClicked ? "" : "display"}>
+    <div className={isButtonClicked ? "display" : ""}>
       {bookingData && (
         <div>
           <h3>

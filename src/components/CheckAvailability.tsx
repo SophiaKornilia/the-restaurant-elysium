@@ -130,9 +130,9 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   };
 
   return (
-    <div>
+    <div id="form-container">
       <button onClick={logCopy1}>Logga kopia</button>
-      <form id="form-container">
+      <form >
         <input
           type="number"
           min={1}
@@ -150,8 +150,10 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
           minDate={new Date()}
           maxDate={maxDate}
         ></DatePicker>
-        <br></br>
+        <br />
+        <br />
         <button onClick={handleSearchClick}>Search available tables</button>
+        </form>
         <div className={!showTimeBtns ? "time-btns display" : "time-btns"}>
           <h4>Pick a time</h4>
           <button
@@ -169,7 +171,6 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
             21:00
           </button>
         </div>
-      </form>
     </div>
   );
 };
