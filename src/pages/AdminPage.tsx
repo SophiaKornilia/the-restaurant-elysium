@@ -2,11 +2,9 @@ import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { AllBookings } from "../contexts/BookingContexts";
 import { IBooking } from "../models/IBooking";
 import { Customer } from "../models/Customer";
-import { CostumerToSend } from "../models/CustomerToSend";
 import { getCustomer, updateBooking, updateCustomer } from "../services/api";
 import { BookingClass } from "../models/BookingClass";
 import axios from "axios";
-import { UpdateCustomer2 } from "../components/UpdateCustomer2";
 
 export const AdminPage = () => {
   const totalBookings = useContext(AllBookings);

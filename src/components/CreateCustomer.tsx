@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useState, ChangeEvent, useEffect } from "react";
 import { Customer } from "../models/Customer";
+import { NewCustomer } from "../models/NewCustomer";
 // 65c9d9502f64dba9babc81d6
 
 interface ICreateCustomerProps {
-  onCustomerCreated: (customer: Customer) => void;
+  onCustomerCreated: (customer: NewCustomer) => void;
   isHidden: (hide: boolean) => void;
 }
 
@@ -16,48 +17,43 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [hide, setHide] = useState(false);
 
-
-  const [customer, setCustomer] = useState<Customer>();
+  const [customer, setCustomer] = useState<NewCustomer>();
   const [checked, setChecked] = useState(false);
 
   console.log(customer);
   console.log(hide);
-  
 
   useEffect(() => {
-    setCustomer(new Customer(firstName, lastName, email, phone));
+    setCustomer(new NewCustomer(firstName, lastName, email, phone));
   }, [firstName, lastName, email, phone]);
 
   const handleClick = async () => {
     if (!checked) {
       alert("Du måste godkänna behandlingen av personuppgifter enligt GDPR.");
       return;
+    }
 
-    } 
+    if (firstName === "" || lastName === "" || email === "" || phone === "") {
+      alert("You may not leave a box blank ");
+    }
 
-      if (firstName === "" || lastName === "" || email === "" || phone === "") {
-        alert("You may not leave a box blank ");
+    try {
+      if (customer) {
+        // Kontrollera om customer inte är undefined
+        const response = await axios.post(
+          "https://school-restaurant-api.azurewebsites.net/customer/create",
+          customer
+        );
+        console.log(response.data);
+        props.onCustomerCreated(customer);
+        setIsButtonClicked(true);
+        setHide(true);
+        props.isHidden(true);
       }
-
-      try {
-           if (customer) {
-          // Kontrollera om customer inte är undefined
-          const response = await axios.post(
-            "https://school-restaurant-api.azurewebsites.net/customer/create",
-            customer
-          );
-          console.log(response.data);
-          props.onCustomerCreated(customer);
-          setIsButtonClicked(true);
-          setHide(true);
-          props.isHidden(true);
-
-        } 
-       
-        } catch (error){
-          console.error("An error occurred while creating customer:", error);
-        }
-  }
+    } catch (error) {
+      console.error("An error occurred while creating customer:", error);
+    }
+  };
 
   return (
     <>
