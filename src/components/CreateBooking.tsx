@@ -41,25 +41,27 @@ export const CreateBooking = (props: ICreateBookingProps) => {
   console.log(bookingData);
 
   const handleClick = async () => {
-    setIsButtonClicked(!isButtonClicked);
-    if (bookingData) {
-      const response = await axios.post(
-        "https://school-restaurant-api.azurewebsites.net/booking/create",
-        bookingData
-      );
+    setIsButtonClicked(true);
+    try {
+      if (bookingData) {
+        const response = await axios.post(
+          "https://school-restaurant-api.azurewebsites.net/booking/create",
+          bookingData
+        );
 
-      console.log(response);
+        console.log(response);
+      }
+
+      console.log(isButtonClicked);
+    } catch (error) {
+      console.error("An error occured while createing a booking");
     }
-
-    console.log(isButtonClicked);
   };
 
   return (
-    <div
-      className={props.hide ? (isButtonClicked ? "" : "display") : "display"}
-    >
+    <div>
       {bookingData && (
-        <div>
+        <div className={props.hide ? "" : "display"}>
           <h3>
             {bookingData.customer.name}", press confirm to confirm your
             booking."
@@ -69,9 +71,9 @@ export const CreateBooking = (props: ICreateBookingProps) => {
           <button onClick={handleClick}>Confirm</button>
         </div>
       )}
-      <div className={isButtonClicked ? "" : "display"}>
+      <div className={isButtonClicked ? "display" : ""}>
         <h3>
-          "You have booked a table at Elysium {bookingData.date} on{" "}
+          You have booked a table at Elysium on {bookingData.date} at{" "}
           {bookingData.time} for {bookingData.numberOfGuests} people.
         </h3>
       </div>

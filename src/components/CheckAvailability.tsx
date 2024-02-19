@@ -12,7 +12,7 @@ interface ICheckAvailabilityProps {
 }
 
 export const CheckAvailability = (props: ICheckAvailabilityProps) => {
-  const [bookings, setBookings] = useState<IBooking[]>([]);
+  const [bookings, setBookings] = useState<IBooking[] | undefined>(undefined);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [people, setPeople] = useState<number>(1);
   const [disableBtn6, setDisabledBtn6] = useState<boolean>(false);
@@ -29,13 +29,14 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   console.log(formatedDate);
 
   const getRestaurantBookings = async () => {
-    const response = await axios.get<IBooking[]>(
-      "https://school-restaurant-api.azurewebsites.net/booking/restaurant/65c9d9502f64dba9babc81d6"
-    );
-
-    return response.data;
-
-    // console.log(response.data);
+    try {
+      const response = await axios.get<IBooking[]>(
+        "https://school-restaurant-api.azurewebsites.net/booking/restaurant/65c9d9502f64dba9babc81d6"
+      );
+      return response.data;
+    } catch (error) {
+      console.error("An error occurred while getting booking data", error);
+    }
   };
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -73,36 +74,40 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
     if (formattedSelectedDate === "" || people === undefined) {
       alert("Please select a date and number of guests");
     } else {
-      // hämta alla bokningar restaurangen har och filtrera fram de med samma datum
-      const totalBookings = await getRestaurantBookings();
-      setBookings(totalBookings);
-      console.log(totalBookings);
+      try {
+        // hämta alla bokningar restaurangen har och filtrera fram de med samma datum
+        const totalBookings = await getRestaurantBookings();
+        setBookings(totalBookings);
+        console.log(totalBookings);
 
-      const result = totalBookings.filter(
-        (booking: IBooking) => booking.date === formattedSelectedDate
-      );
-      console.log(result);
+        const result = totalBookings?.filter(
+          (booking: IBooking) => booking.date === formattedSelectedDate
+        );
+        console.log(result);
 
-      const tablesBooked6 = result.filter(
-        (booking: IBooking) => booking.time === "18:00"
-      );
-      const tablesBooked9 = result.filter(
-        (booking: IBooking) => booking.time === "21:00"
-      );
+        const tablesBooked6 = result?.filter(
+          (booking: IBooking) => booking.time === "18:00"
+        );
+        const tablesBooked9 = result?.filter(
+          (booking: IBooking) => booking.time === "21:00"
+        );
 
-      if (tablesBooked6.length >= 15) {
-        setDisabledBtn6(true);
-      }
+        if (tablesBooked6 && tablesBooked6.length >= 15) {
+          setDisabledBtn6(true);
+        }
 
-      if (tablesBooked9.length >= 15) {
-        setDisabledBtn9(true);
-      }
+        if (tablesBooked9 && tablesBooked9.length >= 15) {
+          setDisabledBtn9(true);
+        }
 
-      if (result.length > 30) {
-        alert("Fully booked");
-        setShowTimeBtns(false);
-      } else {
-        setShowTimeBtns(true);
+        if (result && result.length > 30) {
+          alert("Fully booked");
+          setShowTimeBtns(false);
+        } else {
+          setShowTimeBtns(true);
+        }
+      } catch (error) {
+        console.error("An error occurred while getting booking data", error);
       }
     }
   };
@@ -136,7 +141,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
         <h1>Welcome to Elysium</h1>
         <h3>Make a reservation </h3>
       </div>
-      <form >
+      <form>
         <input
           id="amountOfPeople"
           type="number"
@@ -158,24 +163,24 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
         <br />
         <br />
         <button onClick={handleSearchClick}>Search available tables</button>
-        </form>
-        <div className={!showTimeBtns ? "time-btns display" : "time-btns"}>
-          <h4>Pick a time</h4>
-          <button
-            disabled={disableBtn6}
-            className="time-btn"
-            onClick={handleClickTimeBtn1}
-          >
-            18:00
-          </button>
-          <button
-            disabled={disableBtn9}
-            className="time-btn"
-            onClick={handleClickTimeBtn2}
-          >
-            21:00
-          </button>
-        </div>
+      </form>
+      <div className={!showTimeBtns ? "time-btns display" : "time-btns"}>
+        <h4>Pick a time</h4>
+        <button
+          disabled={disableBtn6}
+          className="time-btn"
+          onClick={handleClickTimeBtn1}
+        >
+          18:00
+        </button>
+        <button
+          disabled={disableBtn9}
+          className="time-btn"
+          onClick={handleClickTimeBtn2}
+        >
+          21:00
+        </button>
+      </div>
     </div>
   );
 };
