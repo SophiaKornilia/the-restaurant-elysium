@@ -5,6 +5,7 @@ import { Customer } from "../models/Customer";
 
 interface ICreateCustomerProps {
   onCustomerCreated: (customer: Customer) => void;
+  isHidden: (hide: boolean) => void;
 }
 
 export const CreateCustomer = (props: ICreateCustomerProps) => {
@@ -13,11 +14,15 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [hide, setHide] = useState(false);
+
 
   const [customer, setCustomer] = useState<Customer>();
   const [checked, setChecked] = useState(false);
 
   console.log(customer);
+  console.log(hide);
+  
 
   useEffect(() => {
     setCustomer(new Customer(firstName, lastName, email, phone));
@@ -27,18 +32,25 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
     if (!checked) {
       alert("Du måste godkänna behandlingen av personuppgifter enligt GDPR.");
       return;
-    }
-    if (customer) {
-      // Kontrollera om customer inte är undefined
-      const response = await axios.post(
-        "https://school-restaurant-api.azurewebsites.net/customer/create",
-        customer
-      );
-      console.log(response.data);
+    } else {
+      if (firstName === "" || lastName === "" || email === "" || phone === "") {
+        alert("You may not leave a box blank ");
+      } else {
+        if (customer) {
+          // Kontrollera om customer inte är undefined
+          const response = await axios.post(
+            "https://school-restaurant-api.azurewebsites.net/customer/create",
+            customer
+          );
+          console.log(response.data);
 
-      props.onCustomerCreated(customer);
+          props.onCustomerCreated(customer);
 
-      setIsButtonClicked(true);
+          setIsButtonClicked(true);
+        }
+      }
+      setHide(true);
+      props.isHidden(true);
     }
   };
 
@@ -79,19 +91,19 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
             }}
           />
           <br />
-          <div  >
+          <div>
             <input
-            type="checkbox"
-            id="GDPRBox"
-            onChange={() => setChecked(!checked)}
-            checked={checked}
-            required
-          />
-          <label htmlFor="GDPRBOX">
-            "Jag godkänner behandlingen av mina personuppgifter enligt GDPR"
-          </label>
+              type="checkbox"
+              id="GDPRBox"
+              onChange={() => setChecked(!checked)}
+              checked={checked}
+              required
+            />
+            <label htmlFor="GDPRBOX">
+              "Jag godkänner behandlingen av mina personuppgifter enligt GDPR"
+            </label>
           </div>
-          
+
           <button onClick={handleClick}>Create</button>
         </div>
       </div>

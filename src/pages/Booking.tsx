@@ -5,6 +5,7 @@ import { CreateCustomer } from "../components/CreateCustomer";
 import { Modal, Button } from "react-bootstrap";
 import { CreateBooking } from "../components/CreateBooking";
 
+
 export const Booking = () => {
   const [bookingCustomer, setBookingCustomer] = useState<Customer>({
     name: "",
@@ -17,6 +18,8 @@ export const Booking = () => {
   const [peopleCopy, setPeopleCopy] = useState<number>(1);
   const [timeCopy, setTimeCopy] = useState("");
   const [show, setShow] = useState(false);
+  const [hideCopy, setHideCopy] = useState(false);
+ 
 
   const handleCustomerCreated = (customer: Customer) => {
     if (!customer) {
@@ -25,6 +28,9 @@ export const Booking = () => {
       setBookingCustomer(customer);
     }
   };
+  const handleHide = (isHidden : boolean) => {
+    setHideCopy(isHidden);
+  }
 
   const handleSelectedDateCopy = (formatedDate: string) => {
     setSelectedDateCopy(formatedDate); // det är fortfarande en tom sträng
@@ -50,6 +56,8 @@ export const Booking = () => {
     console.log(selectedDateCopy);
     console.log(peopleCopy);
     console.log(timeCopy);
+    console.log(hideCopy);
+    
   };
 
   return (
@@ -66,12 +74,13 @@ export const Booking = () => {
           <Modal.Title>Personal information</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <CreateCustomer onCustomerCreated={handleCustomerCreated} />
+          <CreateCustomer onCustomerCreated={handleCustomerCreated} isHidden={handleHide}/>
           <CreateBooking
             chosenTime={timeCopy}
             chosenDate={selectedDateCopy}
             peopleAmount={peopleCopy}
             customer={bookingCustomer}
+            hide={hideCopy}
           />
         </Modal.Body>
         <Modal.Footer>
