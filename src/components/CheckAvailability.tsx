@@ -152,24 +152,24 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
         ></DatePicker>
         <br></br>
         <button onClick={handleSearchClick}>Search available tables</button>
+        <div className={!showTimeBtns ? "time-btns display" : "time-btns"}>
+          <h4>Pick a time</h4>
+          <button
+            disabled={disableBtn6}
+            className="time-btn"
+            onClick={handleClickTimeBtn1}
+          >
+            18:00
+          </button>
+          <button
+            disabled={disableBtn9}
+            className="time-btn"
+            onClick={handleClickTimeBtn2}
+          >
+            21:00
+          </button>
+        </div>
       </form>
-      <div className={!showTimeBtns ? "time-btns display" : "time-btns"}>
-        <h4>Pick a time</h4>
-        <button
-          disabled={disableBtn6}
-          className="time-btn"
-          onClick={handleClickTimeBtn1}
-        >
-          18:00
-        </button>
-        <button
-          disabled={disableBtn9}
-          className="time-btn"
-          onClick={handleClickTimeBtn2}
-        >
-          21:00
-        </button>
-      </div>
     </div>
   );
 };
