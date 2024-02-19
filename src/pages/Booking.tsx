@@ -75,7 +75,7 @@ export const Booking = () => {
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary">Book</Button>
+          {/* <Button variant="secondary">Book</Button> */}
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
