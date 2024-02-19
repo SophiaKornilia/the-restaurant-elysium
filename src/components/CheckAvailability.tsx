@@ -4,6 +4,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { IBooking } from "../models/IBooking";
 import axios from "axios";
 import moment from "moment-timezone";
+import { ThreeDots } from "react-loader-spinner";
+
 interface ICheckAvailabilityProps {
   time: (value: string) => void;
   chosenDate: (formatedDate: string) => void;
@@ -20,6 +22,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [showTimeBtns, setShowTimeBtns] = useState<boolean>(false);
   const [formatedDate, setFormatedDate] = useState<string>("");
   const [time, setTime] = useState("");
+  const [loading, setLoading] = useState(false);
   console.log(time);
 
   //test//
@@ -51,66 +54,72 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   };
 
   console.log("uppdaterat datum", selectedDate);
-
   const handleSearchClick = async (e: FormEvent) => {
     e.preventDefault();
     console.log("handleClick");
-
+  
+    setLoading(true);
+  
     const timezone: string = "Europe/Stockholm";
     const formattedSelectedDate: string = moment(selectedDate)
       .tz(timezone)
       .format("YYYY-MM-DD");
-
+  
     console.log("formaterat datum", formattedSelectedDate);
     setFormatedDate(formattedSelectedDate);
     props.chosenDate(formattedSelectedDate);
     props.peopleAmount(people);
-
+  
     bookings?.map((aBooking) => {
       console.log(aBooking.date, formattedSelectedDate);
     });
-
-    // hanterar sökningen efter lediga bord
+  
+    // hantera sökningen efter lediga bord
     if (formattedSelectedDate === "" || people === undefined) {
       alert("Please select a date and number of guests");
-    } else {
-      try {
-        // hämta alla bokningar restaurangen har och filtrera fram de med samma datum
-        const totalBookings = await getRestaurantBookings();
-        setBookings(totalBookings);
-        console.log(totalBookings);
-
-        const result = totalBookings?.filter(
-          (booking: IBooking) => booking.date === formattedSelectedDate
-        );
-        console.log(result);
-
-        const tablesBooked6 = result?.filter(
-          (booking: IBooking) => booking.time === "18:00"
-        );
-        const tablesBooked9 = result?.filter(
-          (booking: IBooking) => booking.time === "21:00"
-        );
-
-        if (tablesBooked6 && tablesBooked6.length >= 15) {
-          setDisabledBtn6(true);
-        }
-
-        if (tablesBooked9 && tablesBooked9.length >= 15) {
-          setDisabledBtn9(true);
-        }
-
-        if (result && result.length > 30) {
-          alert("Fully booked");
-          setShowTimeBtns(false);
-        } else {
-          setShowTimeBtns(true);
-        }
-      } catch (error) {
-        console.error("An error occurred while getting booking data", error);
+      setLoading(false); 
+      return;
+    }
+  
+    try {
+      // hämta alla bokningar restaurangen har och filtrera fram de med samma datum
+      const totalBookings = await getRestaurantBookings();
+      setBookings(totalBookings);
+      console.log(totalBookings);
+  
+      const result = totalBookings?.filter(
+        (booking: IBooking) => booking.date === formattedSelectedDate
+      );
+      console.log(result);
+  
+      const tablesBooked6 = result?.filter(
+        (booking: IBooking) => booking.time === "18:00"
+      );
+      const tablesBooked9 = result?.filter(
+        (booking: IBooking) => booking.time === "21:00"
+      );
+  
+      if (tablesBooked6 && tablesBooked6.length >= 15) {
+        setDisabledBtn6(true);
       }
+  
+      if (tablesBooked9 && tablesBooked9.length >= 15) {
+        setDisabledBtn9(true);
+      }
+  
+      if (result && result.length > 30) {
+        alert("Fully booked");
+        setShowTimeBtns(false);
+      } else {
+        setShowTimeBtns(true);
+      }
+    } catch (error) {
+      console.error("An error occurred while getting booking data", error);
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   const handleClickTimeBtn1 = () => {
     setTime("18:00");
@@ -136,51 +145,60 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
 
   return (
     <div id="form-container">
-      {/* <button onClick={logCopy1}>Logga kopia</button> */}
-      <div>
-        <h1>Welcome to Elysium</h1>
-        <h3>Make a reservation </h3>
-      </div>
-      <form>
-        <input
-          id="amountOfPeople"
-          type="number"
-          min={1}
-          max={6}
-          placeholder="Press to chose number of guests"
-          value={people}
-          onChange={handleFormChange}
-        />
-        <br></br>
-        <DatePicker
-          selected={selectedDate}
-          placeholderText="Press to chose a date"
-          onChange={handleDateChange}
-          dateFormat="yyyy-MM-dd"
-          minDate={new Date()}
-          maxDate={maxDate}
-        ></DatePicker>
-        <br />
-        <br />
-        <button onClick={handleSearchClick}>Search available tables</button>
-      </form>
-      <div className={!showTimeBtns ? "time-btns display" : "time-btns"}>
-        <h4>Pick a time</h4>
-        <button
-          disabled={disableBtn6}
-          className="time-btn"
-          onClick={handleClickTimeBtn1}
-        >
-          18:00
-        </button>
-        <button
-          disabled={disableBtn9}
-          className="time-btn"
-          onClick={handleClickTimeBtn2}
-        >
-          21:00
-        </button>
-      </div>
+      {/* Visar laddningsindikatorn om loading är true */}
+      {loading ? (
+        <div className="loader-container">
+          <ThreeDots color="#00BFFF" height={100} width={100} />
+        </div>
+      ) : (
+        /* Visar formuläret och annat innehåll om loading är false */
+        <div>
+          <div>
+            <h1>Welcome to Elysium</h1>
+            <h3>Make a reservation </h3>
+          </div>
+          <form>
+            <input
+              id="amountOfPeople"
+              type="number"
+              min={1}
+              max={6}
+              placeholder="Press to chose number of guests"
+              value={people}
+              onChange={handleFormChange}
+            />
+            <br></br>
+            <DatePicker
+              selected={selectedDate}
+              placeholderText="Press to chose a date"
+              onChange={handleDateChange}
+              dateFormat="yyyy-MM-dd"
+              minDate={new Date()}
+              maxDate={maxDate}
+            ></DatePicker>
+            <br />
+            <br />
+            <button onClick={handleSearchClick}>Search available tables</button>
+          </form>
+          <div className={!showTimeBtns ? "time-btns display" : "time-btns"}>
+            <h4>Pick a time</h4>
+            <button
+              disabled={disableBtn6}
+              className="time-btn"
+              onClick={handleClickTimeBtn1}
+            >
+              18:00
+            </button>
+            <button
+              disabled={disableBtn9}
+              className="time-btn"
+              onClick={handleClickTimeBtn2}
+            >
+              21:00
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
-};
+      }
