@@ -4,6 +4,7 @@ import { IBooking } from "../models/IBooking";
 import { Customer } from "../models/Customer";
 import { getCustomer, updateBooking, updateCustomer } from "../services/api";
 import { BookingClass } from "../models/BookingClass";
+import axios from "axios";
 
 export const AdminPage = () => {
   const totalBookings = useContext(AllBookings);
@@ -34,13 +35,17 @@ export const AdminPage = () => {
   const [newBookingInfo, setNewBookingInfo] = useState<BookingClass>();
 
   useEffect(() => {
-    setNewBookingInfo({
-      restaurantId: "65c9d9502f64dba9babc81d6",
-      date: newDate || selectedBooking?.date,
-      time: newTime || selectedBooking?.time,
-      numberOfGuests: newAmountOfGuests || selectedBooking?.numberOfGuests,
-      customerId: selectedBooking?.customerId,
-    });
+    if (selectedBooking) {
+      setNewBookingInfo({
+        id: selectedBooking._id,
+        restaurantId: "65c9d9502f64dba9babc81d6",
+        date: newDate || selectedBooking.date,
+        time: newTime || selectedBooking.time,
+        numberOfGuests: newAmountOfGuests || selectedBooking?.numberOfGuests,
+        // customerId: selectedBooking.customerId,
+        customer: values,
+      });
+    }
   }, [newDate, newTime, newAmountOfGuests]);
 
   useEffect(() => {
@@ -88,21 +93,83 @@ export const AdminPage = () => {
     }
   };
 
-  const handleSave = async () => {
-    console.log("New values:", values);
-    console.log("New booking info:", newBookingInfo);
-    const updateCustomerResponse = await updateCustomer(newBookingInfo.customerId, values)
-    // console.log(updateCustomerResponse)
 
-    // if (newBookingInfo) {
+  const handleSave = async () => {
+    console.log("New booking info to send:", newBookingInfo);
+    console.log("New customer info to send:", values);
+
+    // switch?
+if (values && newBookingInfo) {
+      const updateCustomerResponse = await axios.put(
+        "https://school-restaurant-api.azurewebsites.net/customer/update/" + selectedBooking?.customerId,
+        values
+      );
+      console.log(updateCustomerResponse);
+
+      const updateBookingResponse = await axios.put(
+        "https://school-restaurant-api.azurewebsites.net/booking/update/" +
+          newBookingInfo.id,
+        newBookingInfo
+      );
+      console.log(updateBookingResponse);
+    }
+
+    // if (selectedBooking && values) {
+    //   try {
+    //     const updateCustomerResponse = await axios.put(
+    //       "https://school-restaurant-api.azurewebsites.net/customer/update/" +
+    //         customerID,
+    //       values
+    //     );
+
+    //     console.log(
+    //       "Customer info has been updated:",
+    //       updateCustomerResponse.data
+    //     );
+    //   } catch (error) {
+    //     console.error("Error updating customer");
+    //   }
+    // }
+
+    // if (selectedBooking && newBookingInfo) {
     //   const updateBookingResponse = await updateBooking(
-    //     newBookingInfo?._id,
+    //     newBookingInfo.id,
     //     newBookingInfo
     //   );
-    //   console.log(updateBookingResponse)
-    // } else {
-    //     alert('Something went wrong when updating the information.')
+    //   console.log("Booking info has been updated:", updateBookingResponse);
+    //   console.log(selectedBooking)
     // }
+  };
+
+  const handleUpdateCustomer = async () => {
+    if (selectedBooking && values) {
+      try {
+        const updateCustomerResponse = await axios.put(
+          "https://school-restaurant-api.azurewebsites.net/customer/update/" +
+            customerID,
+          values
+        );
+
+        console.log(
+          "Customer info has been updated:",
+          updateCustomerResponse.data
+        );
+      } catch (error) {
+        console.error("Error updating customer");
+      }
+    }
+  };
+
+  const updateBookingResponse = async () => {
+    console.log('new:', newBookingInfo)
+    if (selectedBooking && newBookingInfo) {
+      const updateBookingResponse = await updateBooking(
+        newBookingInfo.id,
+        newBookingInfo
+      );
+      console.log("Booking info has been updated:", updateBookingResponse);
+      console.log(selectedBooking)
+    }
   };
 
   const handleClose = () => {
@@ -226,16 +293,24 @@ export const AdminPage = () => {
                     }}
                   />
                 </div>
-                <div className="btn-unit">
-                  <button onClick={handleSave}>Save</button>
-                  <button onClick={handleClose}>Cancel</button>
-                </div>
+              </div>
+              <div className="btn-unit">
+                <button onClick={handleUpdateCustomer}>
+                    Update customer
+                  </button>
+                  <button onClick={updateBookingResponse}>
+                    Update booking
+                  </button>
+                <button onClick={handleSave}>Save</button>
+                <button onClick={handleClose}>Cancel</button>
               </div>
             </div>
           </div>
         )}
       </div>
-      <div> {/* La de komponenterna ni gjorde här! :) */}
+      <div>
+        {" "}
+        {/* La de komponenterna ni gjorde här! :) */}
         <h1>Adminpage</h1>
         {/* <DeleteBooking /> */}
         <br />
