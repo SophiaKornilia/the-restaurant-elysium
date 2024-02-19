@@ -16,19 +16,31 @@ export const Contact = () => {
           <h3>Follow us</h3>
           <div id="iconImgContainer">
             <div>
-              <img src={facebookLogo} alt="facebook" />
+              <a href="#">
+                <img src={facebookLogo} alt="facebook" />
+              </a>
             </div>
             <div>
-              <img src={instagramLogo} alt="instagram" />
+              <a href="#">
+                <img src={instagramLogo} alt="instagram" />
+              </a>
             </div>
             <div>
-              <img src={tripAdvisor} alt="tripadvisor" />
+              <a href="#">
+                <img src={tripAdvisor} alt="tripadvisor" />
+              </a>
             </div>
           </div>
         </div>
       </div>
       <div id="formContainer">
-        <form>
+        <iframe
+          width="520"
+          height="400"
+          loading="lazy"
+          src="https://maps.google.com/maps?width=520&amp;height=400&amp;hl=en&amp;q=G%C3%B6teborg%20+(Elysium)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+        ></iframe>
+        {/* <form>
           <label>Name</label>
           <input type="text" />
           <label>Email</label>
@@ -36,9 +48,9 @@ export const Contact = () => {
           <label>Title</label>
           <input type="text" />
           <label>Message</label>
-          <textarea rows={15} />
+          <textarea rows={12} />
           <button>Send</button>
-        </form>
+        </form> */}
       </div>
     </div>
   );
