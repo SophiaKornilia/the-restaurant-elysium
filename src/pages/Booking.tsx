@@ -4,10 +4,11 @@ import { Customer } from "../models/Customer";
 import { CreateCustomer } from "../components/CreateCustomer";
 import { Modal, Button } from "react-bootstrap";
 import { CreateBooking } from "../components/CreateBooking";
+import { NewCustomer } from "../models/NewCustomer";
 
 
 export const Booking = () => {
-  const [bookingCustomer, setBookingCustomer] = useState<Customer>({
+  const [bookingCustomer, setBookingCustomer] = useState<NewCustomer>({
     name: "",
     lastname: "",
     email: "",
@@ -21,7 +22,7 @@ export const Booking = () => {
   const [hideCopy, setHideCopy] = useState(false);
  
 
-  const handleCustomerCreated = (customer: Customer) => {
+  const handleCustomerCreated = (customer: NewCustomer) => {
     if (!customer) {
       console.log("No customer information available");
     } else {

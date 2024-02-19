@@ -1,12 +1,13 @@
 import axios from "axios";
 import { Customer } from "../models/Customer";
 import { useState } from "react";
+import { NewCustomer } from "../models/NewCustomer";
 
 interface ICreateBookingProps {
   chosenTime: string;
   chosenDate: string;
   peopleAmount: number;
-  customer: Customer;
+  customer: NewCustomer;
   hide: boolean;
 }
 
