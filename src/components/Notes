@@ -15,4 +15,15 @@
  * Lifting state up till booking (från CreateCustomer) och sedan använda props för att skicka den informationen till CreateBooking.
  */
 
- /** 
+ /**booking
+- gdpr - om kunden inte klickar i checkbox - alert det går inte att boka
+-när kunden bekräftar får kunden sitt id utskrivet, alt mailat till sig. 
+-styling
+
+admingPage
+-lite styling
+-PUT, ändra på bokningar.
+-göra ny bokning.
+-går det att ändra så kundens namn står. 
+*/
+ 

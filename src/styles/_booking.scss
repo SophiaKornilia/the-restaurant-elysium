@@ -20,33 +20,33 @@
 #form-container {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  min-width: 50%;
   background: rgba(217, 217, 217, 0.2);
   backdrop-filter: blur(7.5px);
-  height: 30vh;
+  min-height: 30vh;
   margin: 40px;
   padding: 30px 70px;
 }
 
 .times {
-    background: rgba(217, 217, 217, 0.2);
-    backdrop-filter: blur(7.5px);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    padding: 20px;
-  
-    h4 {
-      width: 100%;
-    }
-  
-    .time-btn {
-      background-color: #a0a0a0;
-      border: #a0a0a0;
-      padding: 10px;
-    }
+  background: rgba(217, 217, 217, 0.2);
+  backdrop-filter: blur(7.5px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  padding: 20px;
+
+  h4 {
+    width: 100%;
   }
-  
-  .display {
-    display: none;
+
+  .time-btn {
+    background-color: #a0a0a0;
+    border: #a0a0a0;
+    padding: 10px;
   }
+}
+
+.display {
+  display: none;
+}

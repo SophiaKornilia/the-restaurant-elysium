@@ -6,11 +6,11 @@ import { Modal, Button } from "react-bootstrap";
 import { CreateBooking } from "../components/CreateBooking";
 
 export const Booking = () => {
- const [bookingCustomer, setBookingCustomer] = useState<Customer>({
+  const [bookingCustomer, setBookingCustomer] = useState<Customer>({
     name: "",
     lastname: "",
     email: "",
-    phone: ""
+    phone: "",
   });
 
   const [selectedDateCopy, setSelectedDateCopy] = useState<string>("");
@@ -40,9 +40,8 @@ export const Booking = () => {
 
   const handleShowModal = () => {
     setShow(true);
-  }
- 
- 
+  };
+
   const handleClose = () => setShow(false);
 
   // Säkerställa kopia
@@ -51,21 +50,17 @@ export const Booking = () => {
     console.log(selectedDateCopy);
     console.log(peopleCopy);
     console.log(timeCopy);
-   
-    
-    
   };
 
   return (
-    <div>
+    <div id="container">
       <CheckAvailability
         time={handleTimeCopy}
         chosenDate={handleSelectedDateCopy}
         peopleAmount={handlePeopleCopy}
         setShowModal={handleShowModal}
       />
-      <div>
-      </div>
+      <div></div>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>Personal information</Modal.Title>
