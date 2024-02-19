@@ -7,7 +7,7 @@ export class BookingClass {
     public date: string,
     public time: string,
     public numberOfGuests: number,
-    // public customerId: string,
+    public customerId: string,
     public customer: Customer
   ) {}
 };

@@ -2,6 +2,7 @@ import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { AllBookings } from "../contexts/BookingContexts";
 import { IBooking } from "../models/IBooking";
 import { Customer } from "../models/Customer";
+import { CostumerToSend } from "../models/CustomerToSend";
 import { getCustomer, updateBooking, updateCustomer } from "../services/api";
 import { BookingClass } from "../models/BookingClass";
 import axios from "axios";
@@ -13,8 +14,11 @@ export const AdminPage = () => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
+
   const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
-  const [customerInfo, setCustomerInfo] = useState<Customer[]>([]);
+  const [customerInfo, setCustomerInfo] = useState<Customer[]>();
+
+  const [showCustomerEdit, setShowCustomerEdit] = useState<boolean>(false);
 
   const [newName, setNewName] = useState("");
   const [newLastname, setNewLastname] = useState("");
@@ -25,41 +29,55 @@ export const AdminPage = () => {
   const [newTime, setNewTime] = useState<string | null>(selectedTime);
   const [newAmountOfGuests, setNewAmountOfGuests] = useState<number>();
 
-  const [values, setValues] = useState<Customer>({
-    name: newName || (customerInfo.length > 0 ? customerInfo[0].name : ""),
-    lastname:
-      newLastname || (customerInfo.length > 0 ? customerInfo[0].lastname : ""),
-    email: newEmail || (customerInfo.length > 0 ? customerInfo[0].email : ""),
-    phone: newPhone || (customerInfo.length > 0 ? customerInfo[0].phone : ""),
+  const [customerValuesToSend, setcustomerValuesToSend] = useState<Customer>({
+    id: selectedBooking?.customerId!,
+    name: newName,
+    lastname: newLastname,
+    email: newEmail,
+    phone: newPhone,
   });
 
-  const [newBookingInfo, setNewBookingInfo] = useState<BookingClass>();
-
-  useEffect(() => {
-    const newValues = {
-      name: newName || (customerInfo.length > 0 ? customerInfo[0].name : ""),
-      lastname:
-        newLastname ||
-        (customerInfo.length > 0 ? customerInfo[0].lastname : ""),
-      email: newEmail || (customerInfo.length > 0 ? customerInfo[0].email : ""),
-      phone: newPhone || (customerInfo.length > 0 ? customerInfo[0].phone : ""),
-    };
-    setValues(newValues);
-  }, [newName, newLastname, newEmail, newPhone, customerInfo]);
+  const [newBookingInfo, setNewBookingInfo] = useState<BookingClass>({
+    id: selectedBooking?._id!,
+    restaurantId: selectedBooking?.restaurantId!,
+    date: newDate!,
+    time: newTime!,
+    numberOfGuests: newAmountOfGuests!,
+    customerId: selectedBooking?.customerId!,
+    customer: customerValuesToSend,
+  });
 
   useEffect(() => {
     if (selectedBooking) {
-      setNewBookingInfo({
-        id: selectedBooking._id,
-        restaurantId: "65c9d9502f64dba9babc81d6",
-        date: newDate || selectedBooking.date,
-        time: newTime || selectedBooking.time,
-        numberOfGuests: newAmountOfGuests || selectedBooking?.numberOfGuests,
-        // customerId: selectedBooking.customerId,
-        customer: values,
-      });
+      const newBookingValues = {
+        id: selectedBooking._id ?? "",
+        restaurantId: selectedBooking.restaurantId ?? "",
+        date: newDate ?? selectedBooking?.date,
+        time: newTime ?? selectedBooking?.time,
+        numberOfGuests: newAmountOfGuests ?? selectedBooking?.numberOfGuests,
+        customerId: selectedBooking.customerId!,
+        customer: customerValuesToSend,
+      };
+      setNewBookingInfo(newBookingValues);
     }
-  }, [newDate, newTime, newAmountOfGuests]);
+    const newValues = {
+      id: selectedBooking?.customerId!,
+      name: newName || (customerInfo ? customerInfo[0].name : ""),
+      lastname: newLastname || (customerInfo ? customerInfo[0].lastname : ""),
+      email: newEmail || (customerInfo ? customerInfo[0].email : ""),
+      phone: newPhone || (customerInfo ? customerInfo[0].phone : ""),
+    };
+    setcustomerValuesToSend(newValues);
+  }, [
+    newDate,
+    newTime,
+    newAmountOfGuests,
+    newName,
+    newLastname,
+    newEmail,
+    newPhone,
+    customerInfo,
+  ]);
 
   const handleDate = (e: ChangeEvent<HTMLInputElement>) => {
     setSelectedDate(e.target.value);
@@ -91,55 +109,44 @@ export const AdminPage = () => {
     if (booking?.customerId) {
       const customerInfo = await getCustomer(booking.customerId);
       setCustomerInfo(customerInfo);
+      console.log("booking customer:", customerInfo);
     }
   };
 
   const checkValues = () => {
-    console.log("Personal info:", values);
+    console.log("Personal info:", customerValuesToSend);
     console.log("Booking info:", newBookingInfo);
+    console.log(customerValuesToSend.id);
   };
 
   const handleUpdateCustomer = async () => {
-    if (selectedBooking && values) {
-      const updateCustomerResponse = await axios.put(
-        "https://school-restaurant-api.azurewebsites.net/customer/update/" +
-          selectedBooking.customerId,
-        values
-      );
-      console.log(updateCustomerResponse);
-      // After updating customer, also update booking if needed
-      // if (newBookingInfo) {
-      //   const updateBookingResponse = await updateBooking(newBookingInfo.id, newBookingInfo);
-      //   console.log(updateBookingResponse);
-      // }
-      setShowEditForm(false);
-    }
-  };
-
-  const handleBookingUpdate = async () => {
-    if (selectedBooking && values) {
-      const updateCustomerResponse = await axios.put(
-        "https://school-restaurant-api.azurewebsites.net/booking/update/" +
-          selectedBooking._id,
-        newBookingInfo
-      );
-      console.log(updateCustomerResponse);
-    }
-  };
-
-  const handleCustomerUpdate = async () => {
-    if (selectedBooking && values) {
-      const updateCustomerResponse = await axios.put(
-        "https://school-restaurant-api.azurewebsites.net/booking/update/" +
-          selectedBooking.customerId,
-        values
-      );
-      console.log(updateCustomerResponse);
-    }
+    const updateCustomerResponse = await axios.put(
+      "https://school-restaurant-api.azurewebsites.net/customer/update/" +
+        newBookingInfo.customerId,
+      customerValuesToSend
+    );
+    console.log(updateCustomerResponse);
+    setShowEditForm(false);
   };
 
   const handleClose = () => {
     setShowEditForm(false);
+  };
+
+  const handleSaveCustomer = async () => {
+    if (customerValuesToSend) {
+      try {
+        const updateCustomerResponse = await axios.put(
+          "https://school-restaurant-api.azurewebsites.net/customer/update/" +
+            customerValuesToSend.id,
+          customerValuesToSend
+        );
+        console.log("response:", updateCustomerResponse);
+      } catch (error) {
+        console.log(customerValuesToSend);
+        alert("went to catch");
+      }
+    }
   };
 
   return (
@@ -217,53 +224,81 @@ export const AdminPage = () => {
               <div className="customer-info">
                 <div className="info-unit">
                   <label>Name:</label>
-                  <input
-                    type="text"
-                    name="name"
-                    defaultValue={values.name || ""}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      setNewName(e.target.value);
-                    }}
-                  />
+                  <p>{customerInfo?.[0].name}</p>
                 </div>
                 <div className="info-unit">
                   <label>Lastname:</label>
-                  <input
-                    type="text"
-                    name="lastname"
-                    defaultValue={values.lastname || ""}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      setNewLastname(e.target.value);
-                    }}
-                  />
+                  <p>{customerInfo?.[0].lastname}</p>
                 </div>
                 <div className="info-unit">
                   <label>Email:</label>
-                  <input
-                    type="text"
-                    name="email"
-                    defaultValue={values.email || ""}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      setNewEmail(e.target.value);
-                    }}
-                  />
+                  <p>{customerInfo?.[0].email}</p>
                 </div>
                 <div className="info-unit">
                   <label>Phone:</label>
-                  <input
-                    type="text"
-                    name="phone"
-                    defaultValue={values.phone || ""}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      setNewPhone(e.target.value);
-                    }}
-                  />
+                  <p>{customerInfo?.[0].phone}</p>
                 </div>
+                <button onClick={() => setShowCustomerEdit(true)}>
+                  Edit customer
+                </button>
               </div>
+              {showCustomerEdit && (
+                <div className="edit-container">
+                  <div className="edit-customer">
+                      <h3>Change personal information</h3>
+                    <div className="edit-info-unit">
+                      <label>Name:</label>
+                      <input
+                        type="text"
+                        name="name"
+                        defaultValue={customerInfo?.[0].name}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          setNewName(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="edit-info-unit">
+                      <label>Lastname:</label>
+                      <input
+                        type="text"
+                        name="lastname"
+                        defaultValue={customerInfo?.[0].lastname}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          setNewLastname(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="edit-info-unit">
+                      <label>Email:</label>
+                      <input
+                        type="text"
+                        name="email"
+                        defaultValue={customerInfo?.[0].email}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          setNewEmail(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="edit-info-unit">
+                      <label>Phone:</label>
+                      <input
+                        type="text"
+                        name="phone"
+                        defaultValue={customerInfo?.[0].phone}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          setNewPhone(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <button onClick={handleSaveCustomer}>Save changes</button>
+                    <button>Cancel</button>
+                  </div>
+                </div>
+              )}
               <div className="btn-unit">
                 <button onClick={checkValues}>Check values to send</button>
-                <button onClick={handleCustomerUpdate}>Update customer</button>
-                <button onClick={handleBookingUpdate}>Update booking</button>
+                {/* <button onClick={handleCustomerUpdate}>Update customer</button>
+                <button onClick={handleBookingUpdate}>Update booking</button> */}
                 <button onClick={handleClose}>Cancel</button>
               </div>
             </div>
@@ -276,7 +311,7 @@ export const AdminPage = () => {
         <h1>Adminpage</h1>
         {/* <DeleteBooking /> */}
         <br />
-        <UpdateCustomer2 />
+        {/* <UpdateCustomer2 /> */}
       </div>
     </>
   );
