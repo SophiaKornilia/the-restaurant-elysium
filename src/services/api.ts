@@ -1,6 +1,7 @@
 import axios from "axios";
 import { IBooking } from "../models/IBooking";
 import { Customer } from "../models/Customer";
+import { BookingClass } from "../models/BookingClass";
 
 const API_BASE_URL = "https://school-restaurant-api.azurewebsites.net";
 
@@ -31,7 +32,7 @@ export const createBooking = async (bookingData: IBooking) => {
 
 export const updateBooking = async (
   bookingId: string,
-  newBookingInfo: IBooking
+  newBookingInfo: BookingClass
 ) => {
   const response = await axios.put(
     API_BASE_URL + "/booking/update/" + bookingId,
@@ -62,9 +63,9 @@ export const createCustomer = async (customerData: any) => {
   return response.data
 };
 
-export const updateCustomer = async (customerId: string, values: Customer) => {
+export const updateCustomer = async (customerID: string, values: Customer) => {
   const response = await axios.put(
-    API_BASE_URL + "/customer/update/" + customerId,
+    API_BASE_URL + "/customer/update/" + customerID,
     values
   );
   return response.data
