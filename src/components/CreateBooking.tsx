@@ -7,6 +7,7 @@ interface ICreateBookingProps {
   chosenDate: string;
   peopleAmount: number;
   customer: Customer;
+  hide: boolean;
 }
 
 export const CreateBooking = (props: ICreateBookingProps) => {
@@ -17,9 +18,10 @@ export const CreateBooking = (props: ICreateBookingProps) => {
 
   console.log(props.chosenTime);
   console.log(props.peopleAmount);
+  console.log(props.hide);
 
   // const formatedChosenDate = props.chosenDate?.toISOString().slice(0, 10);
-  const [isButtonClicked, setIsButtonClicked] = useState(true);
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   console.log("är det rätt datum", props.chosenDate);
 
@@ -39,6 +41,7 @@ export const CreateBooking = (props: ICreateBookingProps) => {
   console.log(bookingData);
 
   const handleClick = async () => {
+    setIsButtonClicked(!isButtonClicked);
     if (bookingData) {
       const response = await axios.post(
         "https://school-restaurant-api.azurewebsites.net/booking/create",
@@ -47,10 +50,14 @@ export const CreateBooking = (props: ICreateBookingProps) => {
 
       console.log(response);
     }
-    setIsButtonClicked(false);
+
+    console.log(isButtonClicked);
   };
+
   return (
-    <div className={isButtonClicked ? "display" : ""}>
+    <div
+      className={props.hide ? (isButtonClicked ? "" : "display") : "display"}
+    >
       {bookingData && (
         <div>
           <h3>
@@ -62,7 +69,7 @@ export const CreateBooking = (props: ICreateBookingProps) => {
           <button onClick={handleClick}>Confirm</button>
         </div>
       )}
-      <div className={isButtonClicked ? "display" : ""}>
+      <div className={isButtonClicked ? "" : "display"}>
         <h3>
           "You have booked a table at Elysium {bookingData.date} on{" "}
           {bookingData.time} for {bookingData.numberOfGuests} people.

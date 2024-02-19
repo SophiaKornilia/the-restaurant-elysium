@@ -123,28 +123,33 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const maxDate = new Date();
   maxDate.setDate(maxDate.getDate() + 28);
 
-  const logCopy1 = () => {
-    console.log(formatedDate);
-    console.log(time);
-    console.log(people);
-  };
+  // const logCopy1 = () => {
+  //   console.log(formatedDate);
+  //   console.log(time);
+  //   console.log(people);
+  // };
 
   return (
     <div id="form-container">
-      <button onClick={logCopy1}>Logga kopia</button>
+      {/* <button onClick={logCopy1}>Logga kopia</button> */}
+      <div>
+        <h1>Welcome to Elysium</h1>
+        <h3>Make a reservation </h3>
+      </div>
       <form >
         <input
+          id="amountOfPeople"
           type="number"
           min={1}
           max={6}
-          placeholder="People"
+          placeholder="Press to chose number of guests"
           value={people}
           onChange={handleFormChange}
         />
         <br></br>
         <DatePicker
           selected={selectedDate}
-          placeholderText="Find available tables"
+          placeholderText="Press to chose a date"
           onChange={handleDateChange}
           dateFormat="yyyy-MM-dd"
           minDate={new Date()}
