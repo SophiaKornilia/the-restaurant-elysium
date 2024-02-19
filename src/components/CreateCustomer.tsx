@@ -15,8 +15,7 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const [customer, setCustomer] = useState<Customer>();
-
-  // const [customerCopy, setCustomerCopy] = useState<Customer>(); //skicka till booking
+  const [checked, setChecked] = useState(false);
 
   console.log(customer);
 
@@ -25,6 +24,10 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
   }, [firstName, lastName, email, phone]);
 
   const handleClick = async () => {
+    if (!checked) {
+      alert("Du måste godkänna behandlingen av personuppgifter enligt GDPR.");
+      return;
+    }
     if (customer) {
       // Kontrollera om customer inte är undefined
       const response = await axios.post(
@@ -38,8 +41,6 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
       setIsButtonClicked(true);
     }
   };
-
-  // console.log(props.customerCopy);
 
   return (
     <>
@@ -77,6 +78,20 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
               setPhone(e.target.value);
             }}
           />
+          <br />
+          <div  >
+            <input
+            type="checkbox"
+            id="GDPRBox"
+            onChange={() => setChecked(!checked)}
+            checked={checked}
+            required
+          />
+          <label htmlFor="GDPRBOX">
+            "Jag godkänner behandlingen av mina personuppgifter enligt GDPR"
+          </label>
+          </div>
+          
           <button onClick={handleClick}>Create</button>
         </div>
       </div>
