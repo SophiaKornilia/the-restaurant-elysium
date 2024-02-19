@@ -1,10 +1,9 @@
-import { useContext, useState, ChangeEvent, useEffect } from "react";
-import { DeleteBooking } from "../components/DeleteBooking";
-import { UpdateCustomer2 } from "../components/UpdateCustomer2";
-import { AllBookings } from "../Context/BookingContexts";
-import { Customer } from "../models/Customer";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { AllBookings } from "../contexts/BookingContexts";
 import { IBooking } from "../models/IBooking";
-import { getCustomer, updateCustomer, updateBooking } from "../services/api";
+import { Customer } from "../models/Customer";
+import { getCustomer, updateBooking, updateCustomer } from "../services/api";
+import { BookingClass } from "../models/BookingClass";
 
 export const AdminPage = () => {
   const totalBookings = useContext(AllBookings);
@@ -20,16 +19,29 @@ export const AdminPage = () => {
   const [newEmail, setNewEmail] = useState("");
   const [newPhone, setNewPhone] = useState("");
 
-  const [values, setValues] = useState<Customer[]>([
-    {
-      name: newName || (customerInfo.length > 0 ? customerInfo[0].name : ""),
-      lastname:
-        newLastname ||
-        (customerInfo.length > 0 ? customerInfo[0].lastname : ""),
-      email: newEmail || (customerInfo.length > 0 ? customerInfo[0].email : ""),
-      phone: newPhone || (customerInfo.length > 0 ? customerInfo[0].phone : ""),
-    },
-  ]);
+  const [newDate, setNewDate] = useState<string | null>(selectedDate);
+  const [newTime, setNewTime] = useState<string | null>(selectedTime);
+  const [newAmountOfGuests, setNewAmountOfGuests] = useState<number>();
+
+  const [values, setValues] = useState<Customer>({
+    name: newName || (customerInfo.length > 0 ? customerInfo[0].name : ""),
+    lastname:
+      newLastname || (customerInfo.length > 0 ? customerInfo[0].lastname : ""),
+    email: newEmail || (customerInfo.length > 0 ? customerInfo[0].email : ""),
+    phone: newPhone || (customerInfo.length > 0 ? customerInfo[0].phone : ""),
+  });
+
+  const [newBookingInfo, setNewBookingInfo] = useState<BookingClass>();
+
+  useEffect(() => {
+    setNewBookingInfo({
+      restaurantId: "65c9d9502f64dba9babc81d6",
+      date: newDate || selectedBooking?.date,
+      time: newTime || selectedBooking?.time,
+      numberOfGuests: newAmountOfGuests || selectedBooking?.numberOfGuests,
+      customerId: selectedBooking?.customerId,
+    });
+  }, [newDate, newTime, newAmountOfGuests]);
 
   useEffect(() => {
     const newValues = {
@@ -40,19 +52,8 @@ export const AdminPage = () => {
       email: newEmail || (customerInfo.length > 0 ? customerInfo[0].email : ""),
       phone: newPhone || (customerInfo.length > 0 ? customerInfo[0].phone : ""),
     };
-    setValues([newValues]);
+    setValues(newValues);
   }, [newName, newLastname, newEmail, newPhone, customerInfo]);
-
-  const [newBookingInfo, setNewBookingInfo] = useState<IBooking[]>([
-    {
-      _id: "",
-      restaurantId: "65c9d9502f64dba9babc81d6",
-      date: "",
-      time: "",
-      numberOfGuests: 0,
-      customerId: "",
-    },
-  ]);
 
   const handleDate = (e: ChangeEvent<HTMLInputElement>) => {
     setSelectedDate(e.target.value);
@@ -85,52 +86,29 @@ export const AdminPage = () => {
       const customerInfo = await getCustomer(booking.customerId);
       setCustomerInfo(customerInfo);
     }
-
-    setNewBookingInfo([
-      {
-        _id: booking._id,
-        restaurantId: booking.restaurantId,
-        date: booking.date,
-        time: booking.time,
-        numberOfGuests: booking.numberOfGuests,
-        customerId: booking.customerId,
-      },
-    ]);
   };
 
   const handleSave = async () => {
-    try {
-      const updatedCustomer = await updateCustomer(
-        selectedBooking?.customerId || "",
-        {
-          name: newName,
-          lastname: newLastname,
-          email: newEmail,
-          phone: newPhone,
-        }
-      );
+    console.log("New values:", values);
+    console.log("New booking info:", newBookingInfo);
+    const updateCustomerResponse = await updateCustomer(newBookingInfo.customerId, values)
+    // console.log(updateCustomerResponse)
 
-      const updatedBooking = await updateBooking(selectedBooking?._id || "", {
-        _id: selectedBooking?._id || "",
-        restaurantId: selectedBooking?.restaurantId || "",
-        date: selectedBooking?.date || "",
-        time: selectedBooking?.time || "",
-        numberOfGuests: selectedBooking?.numberOfGuests || 0,
-        customerId: selectedBooking?.customerId || "",
-      });
-
-      setShowEditForm(false);
-
-      console.log("Updated customer:", updatedCustomer);
-      console.log("Updated booking:", updatedBooking);
-    } catch (error) {
-      alert("Error updating customer or booking");
-    }
+    // if (newBookingInfo) {
+    //   const updateBookingResponse = await updateBooking(
+    //     newBookingInfo?._id,
+    //     newBookingInfo
+    //   );
+    //   console.log(updateBookingResponse)
+    // } else {
+    //     alert('Something went wrong when updating the information.')
+    // }
   };
 
   const handleClose = () => {
     setShowEditForm(false);
   };
+
   return (
     <>
       <header>
@@ -162,19 +140,43 @@ export const AdminPage = () => {
               <h3>Booking information</h3>
               <div className="booking-info">
                 <div className="booking-info-unit">
-                  <h4>Date: {selectedBooking?.date}</h4>
-                  <input type="date" />
+                  <h4>Date:</h4>
+                  <input
+                    type="date"
+                    // value={newDate || ""}
+                    value={newDate || selectedBooking?.date}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                      setNewDate(e.target.value);
+                    }}
+                  />
                 </div>
                 <div className="booking-info-unit">
-                  <h4>Time: {selectedBooking?.time}</h4>
+                  <h4>Time:</h4>
                   <div className="forn-btn-container">
-                    <button>18:00</button>
-                    <button>21:00</button>
+                    <input
+                      type="time"
+                      value={newTime || selectedBooking?.time}
+                      min="18:00"
+                      max="21:00"
+                      step="18000"
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        setNewTime(e.target.value);
+                      }}
+                    />
                   </div>
                 </div>
                 <div className="booking-info-unit">
-                  <h4>Guests: {selectedBooking?.numberOfGuests}</h4>
-                  <input type="number" min={1} max={6} />
+                  <h4>Guests:</h4>
+                  <input
+                    type="number"
+                    min={1}
+                    max={6}
+                    value={newAmountOfGuests || selectedBooking?.numberOfGuests}
+                    // value={newAmountOfGuests || ""}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                      setNewAmountOfGuests(parseInt(e.target.value));
+                    }}
+                  />
                 </div>
                 <p>Booking ID: {selectedBooking?._id} </p>
                 <p>Customer ID: {selectedBooking?.customerId} </p>
@@ -185,7 +187,7 @@ export const AdminPage = () => {
                   <input
                     type="text"
                     name="name"
-                    defaultValue={values[0]?.name || ""}
+                    defaultValue={values.name || ""}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       setNewName(e.target.value);
                     }}
@@ -196,7 +198,7 @@ export const AdminPage = () => {
                   <input
                     type="text"
                     name="lastname"
-                    defaultValue={values[0]?.lastname || ""}
+                    defaultValue={values.lastname || ""}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       setNewLastname(e.target.value);
                     }}
@@ -207,7 +209,7 @@ export const AdminPage = () => {
                   <input
                     type="text"
                     name="email"
-                    defaultValue={values[0]?.email || ""}
+                    defaultValue={values.email || ""}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       setNewEmail(e.target.value);
                     }}
@@ -218,7 +220,7 @@ export const AdminPage = () => {
                   <input
                     type="text"
                     name="phone"
-                    defaultValue={values[0]?.phone || ""}
+                    defaultValue={values.phone || ""}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       setNewPhone(e.target.value);
                     }}
@@ -235,9 +237,9 @@ export const AdminPage = () => {
       </div>
       <div> {/* La de komponenterna ni gjorde här! :) */}
         <h1>Adminpage</h1>
-        <DeleteBooking />
+        {/* <DeleteBooking /> */}
         <br />
-        <UpdateCustomer2 />
+        {/* <UpdateCustomer2 /> */}
       </div>
     </>
   );
