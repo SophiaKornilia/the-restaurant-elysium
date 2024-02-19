@@ -18,7 +18,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [disableBtn6, setDisabledBtn6] = useState<boolean>(false);
   const [disableBtn9, setDisabledBtn9] = useState<boolean>(false);
   const [showTimeBtns, setShowTimeBtns] = useState<boolean>(false);
-  const [formatedDate, setFormatedDate] = useState<string>(""); 
+  const [formatedDate, setFormatedDate] = useState<string>("");
   const [time, setTime] = useState("");
   console.log(time);
 
@@ -27,7 +27,6 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
 
   console.log(props.time);
   console.log(formatedDate);
-  
 
   const getRestaurantBookings = async () => {
     const response = await axios.get<IBooking[]>(
@@ -42,6 +41,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPeople(parseInt(e.target.value));
     console.log(e.target.value);
+    props.peopleAmount(people);
   };
 
   const handleDateChange = (date: SetStateAction<Date | null>) => {
@@ -61,13 +61,13 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
       .tz(timezone)
       .format("YYYY-MM-DD");
 
-      console.log("formaterat datum", formattedSelectedDate);
-      setFormatedDate(formattedSelectedDate); 
+    console.log("formaterat datum", formattedSelectedDate);
+    setFormatedDate(formattedSelectedDate);
+    props.chosenDate(formattedSelectedDate);
 
     bookings?.map((aBooking) => {
       console.log(aBooking.date, formattedSelectedDate);
     });
-    
 
     // hanterar sökningen efter lediga bord
     if (formattedSelectedDate === "" || people === undefined) {
@@ -123,8 +123,15 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const maxDate = new Date();
   maxDate.setDate(maxDate.getDate() + 28);
 
+  const logCopy1 = () => {
+    console.log(formatedDate);
+    console.log(time);
+    console.log(people);
+  };
+
   return (
     <div>
+      <button onClick={logCopy1}>Logga kopia</button>
       <form id="form-container">
         <input
           type="number"
