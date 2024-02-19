@@ -32,27 +32,32 @@ export const CreateCustomer = (props: ICreateCustomerProps) => {
     if (!checked) {
       alert("Du måste godkänna behandlingen av personuppgifter enligt GDPR.");
       return;
-    } else {
+
+    } 
+
       if (firstName === "" || lastName === "" || email === "" || phone === "") {
         alert("You may not leave a box blank ");
-      } else {
-        if (customer) {
+      }
+
+      try {
+           if (customer) {
           // Kontrollera om customer inte är undefined
           const response = await axios.post(
             "https://school-restaurant-api.azurewebsites.net/customer/create",
             customer
           );
           console.log(response.data);
-
           props.onCustomerCreated(customer);
-
           setIsButtonClicked(true);
+          setHide(true);
+          props.isHidden(true);
+
+        } 
+       
+        } catch (error){
+          console.error("An error occurred while creating customer:", error);
         }
-      }
-      setHide(true);
-      props.isHidden(true);
-    }
-  };
+  }
 
   return (
     <>

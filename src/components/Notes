@@ -27,3 +27,21 @@ admingPage
 -går det att ändra så kundens namn står. 
 */
  
+
+ Adminpage 
+ - Cancelknappen
+ - Lägg namn på kunden i listan
+ - Kolla om det finns ledig tid vid ombokning. 
+ - Lägg in deletefunktion på knapp.
+ - Animationer 
+ - Skapa en reservation
+ - koppla inloggningen till adminpage
+
+ Animationer - vart ska de vara? 
+ - på alla try/catch 
+ - vi får testa applikationen och se vart de ska vara 
+
+ Homepage 
+ -knapparna se till att de fungerar. 
+
+
