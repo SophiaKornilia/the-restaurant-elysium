@@ -6,16 +6,13 @@ import { Modal, Button } from "react-bootstrap";
 import { CreateBooking } from "../components/CreateBooking";
 
 export const Booking = () => {
- 
-
-  // const [customerCopy, setCustomerCopy] = useState<Customer>();
-  // const [selectedTime, setSelectedTime] = useState("");
-  const [bookingCustomer, setBookingCustomer] = useState<Customer>({
+ const [bookingCustomer, setBookingCustomer] = useState<Customer>({
     name: "",
     lastname: "",
     email: "",
     phone: ""
   });
+
   const [selectedDateCopy, setSelectedDateCopy] = useState<string>("");
   const [peopleCopy, setPeopleCopy] = useState<number>(1);
   const [timeCopy, setTimeCopy] = useState("");
@@ -29,7 +26,7 @@ export const Booking = () => {
     }
   };
 
-  const handleSelectedDate = (formatedDate: string) => {
+  const handleSelectedDateCopy = (formatedDate: string) => {
     setSelectedDateCopy(formatedDate); // det är fortfarande en tom sträng
   };
 
@@ -54,6 +51,8 @@ export const Booking = () => {
     console.log(selectedDateCopy);
     console.log(peopleCopy);
     console.log(timeCopy);
+   
+    
     
   };
 
@@ -61,7 +60,7 @@ export const Booking = () => {
     <div>
       <CheckAvailability
         time={handleTimeCopy}
-        chosenDate={handleSelectedDate}
+        chosenDate={handleSelectedDateCopy}
         peopleAmount={handlePeopleCopy}
         setShowModal={handleShowModal}
       />
