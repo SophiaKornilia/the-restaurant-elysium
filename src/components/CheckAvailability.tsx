@@ -41,7 +41,6 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPeople(parseInt(e.target.value));
     console.log(e.target.value);
-    props.peopleAmount(people);
   };
 
   const handleDateChange = (date: SetStateAction<Date | null>) => {
@@ -64,6 +63,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
     console.log("formaterat datum", formattedSelectedDate);
     setFormatedDate(formattedSelectedDate);
     props.chosenDate(formattedSelectedDate);
+    props.peopleAmount(people);
 
     bookings?.map((aBooking) => {
       console.log(aBooking.date, formattedSelectedDate);
