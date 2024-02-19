@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { CheckAvailability } from "../components/CheckAvailability";
-import { Customer } from "../models/Customer";
 import { CreateCustomer } from "../components/CreateCustomer";
 import { Modal, Button } from "react-bootstrap";
 import { CreateBooking } from "../components/CreateBooking";

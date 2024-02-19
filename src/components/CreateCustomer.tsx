@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState, ChangeEvent, useEffect } from "react";
-import { Customer } from "../models/Customer";
 import { NewCustomer } from "../models/NewCustomer";
 // 65c9d9502f64dba9babc81d6
 

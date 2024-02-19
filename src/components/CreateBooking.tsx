@@ -1,5 +1,4 @@
 import axios from "axios";
-import { Customer } from "../models/Customer";
 import { useState } from "react";
 import { NewCustomer } from "../models/NewCustomer";
 
@@ -62,7 +61,7 @@ export const CreateBooking = (props: ICreateBookingProps) => {
   return (
     <div>
       {bookingData && (
-        <div className={props.hide ? "" : "display"}>
+        <div className={props.hide ? (isButtonClicked ? "display" : "") : "display"}>
           <h3>
             {bookingData.customer.name}", press confirm to confirm your
             booking."
@@ -72,7 +71,7 @@ export const CreateBooking = (props: ICreateBookingProps) => {
           <button onClick={handleClick}>Confirm</button>
         </div>
       )}
-      <div className={isButtonClicked ? "display" : ""}>
+      <div className={isButtonClicked ? "" : "display"}>
         <h3>
           You have booked a table at Elysium on {bookingData.date} at{" "}
           {bookingData.time} for {bookingData.numberOfGuests} people.
