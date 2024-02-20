@@ -184,7 +184,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
       {/* Visar laddningsindikatorn om loading är true */}
       {loading ? (
         <div className="loader-container">
-          <ThreeDots color="#00BFFF" height={100} width={100} />
+          <ThreeDots color="#A0A0A0" height={100} width={100} />
         </div>
       ) : (
         /* Visar formuläret och annat innehåll om loading är false */

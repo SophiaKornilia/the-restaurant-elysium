@@ -1,8 +1,16 @@
+import { useState } from "react";
 import facebookLogo from "../images/Facebook.png";
 import instagramLogo from "../images/Instagram.png";
 import tripAdvisor from "../images/TripAdvisor.png";
+import { ThreeCircles} from "react-loader-spinner";
 
 export const Contact = () => {
+  const [mapLoading, setMapLoading] = useState(true);
+
+  const handleMapLoad = () => {
+    setMapLoading(false);
+  };
+
   return (
     <div id="contactContainer">
       <div id="textContainer">
@@ -34,22 +42,13 @@ export const Contact = () => {
         </div>
       </div>
       <div id="formContainer">
+        {mapLoading && <ThreeCircles color="#A0A0A0" />}
         <iframe
           width="520"
           height="400"
           src="https://maps.google.com/maps?width=520&amp;height=400&amp;hl=en&amp;q=G%C3%B6teborg%20+(Elysium)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+          onLoad={handleMapLoad} 
         ></iframe>
-        {/* <form>
-          <label>Name</label>
-          <input type="text" />
-          <label>Email</label>
-          <input type="text" />
-          <label>Title</label>
-          <input type="text" />
-          <label>Message</label>
-          <textarea rows={12} />
-          <button>Send</button>
-        </form> */}
       </div>
     </div>
   );
