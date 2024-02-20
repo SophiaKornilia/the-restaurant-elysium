@@ -181,6 +181,9 @@ export const AdminPage = () => {
           </div>
         </div>
         <div className="booking-list">
+        {filteredBookings.length === 0 ? (
+          <p>No bookings this day</p>
+        ) : (
           <ul>
             {filteredBookings.map((booking) => (
               <li key={booking._id} className="booking-unit">
@@ -192,7 +195,8 @@ export const AdminPage = () => {
               </li>
             ))}
           </ul>
-        </div>
+        )}
+      </div>
         {showEditForm && (
           <div className="edit-container">
             <div className="edit-form">
