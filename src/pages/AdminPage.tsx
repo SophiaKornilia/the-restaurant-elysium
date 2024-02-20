@@ -7,6 +7,8 @@ import { BookingClass } from "../models/BookingClass";
 import axios from "axios";
 import { DeleteBooking } from "../components/DeleteBooking";
 import { NewCustomer } from "../models/NewCustomer";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export const AdminPage = () => {
   const totalBookings = useContext(AllBookings);
@@ -19,6 +21,8 @@ export const AdminPage = () => {
   const [showDelete, setShowDelete] = useState<boolean>(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
   const [showCreateBooking, setShowCreateBooking] = useState<boolean>(false);
+  const [createCustomerForm, setCreateCustomerForm] = useState<boolean>(false);
+  const [showTimeBtns, setShowTimeBtns] = useState<boolean>(false);
 
   const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
   const [customerInfo, setCustomerInfo] = useState<Customer[]>();
@@ -34,6 +38,12 @@ export const AdminPage = () => {
 
   const [bookingToDelete, setBookingToDelete] = useState<IBooking>();
   const [customerToDelete, setCustomerToDelete] = useState<NewCustomer>();
+
+  const [newBookingDate, setNewBookingdate] = useState<string>();
+  const [newBookingAmount, setNewBookingAmount] = useState<number>();
+  const [newBookingTime, setNewBookingTime] = useState<string>();
+  const [disableBtn6, setDisabledBtn6] = useState<boolean>(true);
+  const [disableBtn9, setDisabledBtn9] = useState<boolean>(true);
 
   const [customerValuesToSend, setcustomerValuesToSend] = useState<Customer>({
     id: selectedBooking?.customerId!,
@@ -193,12 +203,126 @@ export const AdminPage = () => {
     setShowCreateBooking(true);
   };
 
+  const handleNewBookingAmount = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewBookingAmount(parseInt(e.target.value));
+  };
+
+  const handleSearch = () => {
+    if (newBookingDate === "" || newBookingAmount === undefined) {
+      alert("Please select a date and number of guests");
+      return;
+    }
+    try {
+      const result = totalBookings?.filter(
+        (booking: IBooking) => booking.date === newBookingDate
+      );
+
+      if (result && result.length >= 30) {
+        alert("Fully booked");
+        setShowTimeBtns(false);
+      } else {
+        setShowTimeBtns(true);
+      }
+
+      const tablesBooked6 = result?.filter(
+        (booking: IBooking) => booking.time === "18:00"
+      );
+
+      const tablesBooked9 = result?.filter(
+        (booking: IBooking) => booking.time === "21:00"
+      );
+
+      setDisabledBtn6(tablesBooked6 && tablesBooked6.length >= 15);
+      setDisabledBtn9(tablesBooked9 && tablesBooked9.length >= 15);
+    } catch (error) {
+      console.error("An error occurred while getting booking data", error);
+    }
+  };
+
+  const handleClickTimeBtn1 = () => {
+    setNewBookingTime("18:00");
+    console.log(newBookingTime);
+    setCreateCustomerForm(true);
+  };
+
+  const handleClickTimeBtn2 = () => {
+    setNewBookingTime("21:00");
+    console.log(newBookingTime);
+    setCreateCustomerForm(true);
+  };
+
   return (
     <>
       <header>
         <button onClick={handleCreateBooking}>Create reservation</button>
       </header>
-      {showCreateBooking && <div className="create-booking-container"></div>}
+      {showCreateBooking && (
+        <div className="create-booking-container">
+          <div className="create-booking-box">
+            <input
+              type="date"
+              value={newBookingDate}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setNewBookingdate(e.target.value);
+              }}
+            />
+            <input
+              id="amountOfPeople"
+              type="number"
+              min={1}
+              max={6}
+              placeholder="0"
+              value={newBookingAmount}
+              onChange={handleNewBookingAmount}
+            />
+            <button onClick={handleSearch}>Search for available times</button>
+            {showTimeBtns && (
+              <div className="time-btn">
+                <button
+                  disabled={disableBtn6}
+                  className="time-btn"
+                  onClick={handleClickTimeBtn1}
+                >
+                  18:00
+                </button>
+                <button
+                  disabled={disableBtn9}
+                  className="time-btn"
+                  onClick={handleClickTimeBtn2}
+                >
+                  21:00
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      {createCustomerForm && (
+        <div className="customer-form-container">
+          <div className="customer-form">
+            <input
+              type="text"
+              placeholder="Firstname"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {}}
+            />
+            <input
+              type="text"
+              placeholder="Lastname"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {}}
+            />
+            <input
+              type="text"
+              placeholder="Email"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {}}
+            />
+            <input
+              type="text"
+              placeholder="Phone"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {}}
+            />
+          </div>
+        </div>
+      )}
       <div className="main">
         <div className="side-bar">
           <div className="calendar-container">
