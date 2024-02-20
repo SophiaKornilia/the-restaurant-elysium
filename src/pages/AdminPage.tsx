@@ -9,6 +9,8 @@ import { DeleteBooking } from "../components/DeleteBooking";
 import { NewCustomer } from "../models/NewCustomer";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ThreeDots } from "react-loader-spinner";
+
 
 export const AdminPage = () => {
   const totalBookings = useContext(AllBookings);
@@ -44,6 +46,8 @@ export const AdminPage = () => {
   const [newBookingTime, setNewBookingTime] = useState<string>();
   const [disableBtn6, setDisabledBtn6] = useState<boolean>(true);
   const [disableBtn9, setDisabledBtn9] = useState<boolean>(true);
+ const [loading, setLoading] = useState(false);
+
 
   const [customerValuesToSend, setcustomerValuesToSend] = useState<Customer>({
     id: selectedBooking?.customerId!,
@@ -144,13 +148,17 @@ export const AdminPage = () => {
       );
       console.log(updateBookingResponse);
       setShowEditForm(false);
+      setLoading(true)
     } catch {
       alert("Something went wrong when updating the booking");
+    } finally {
+      setLoading(false)
     }
   };
 
   const handleSaveCustomer = async () => {
     if (customerValuesToSend) {
+      setLoading(true); 
       try {
         const updateCustomerResponse = await axios.put(
           "https://school-restaurant-api.azurewebsites.net/customer/update/" +
@@ -161,9 +169,12 @@ export const AdminPage = () => {
         setShowCustomerEdit(false);
       } catch (error) {
         alert("Something went wrong when updating the customer");
+      } finally {
+        setLoading(false);
       }
     }
   };
+  
 
   const handleDeleteBtn = async (booking: IBooking) => {
     setShowDeleteConfirm(true);
@@ -180,8 +191,15 @@ export const AdminPage = () => {
 
   const handleDeleteBooking = async () => {
     if (bookingToDelete) {
-      const deletedBooking = await deleteBooking(bookingToDelete._id);
-      console.log("deleted booking", deletedBooking);
+      setLoading(true); 
+      try {
+        const deletedBooking = await deleteBooking(bookingToDelete._id);
+        console.log("deleted booking", deletedBooking);
+      } catch (error) {
+        console.error("Error occurred while deleting booking:", error);
+      } finally {
+        setLoading(false);
+      }
     }
     setShowDeleteConfirm(false);
     location.reload();
@@ -207,11 +225,12 @@ export const AdminPage = () => {
     setNewBookingAmount(parseInt(e.target.value));
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (newBookingDate === "" || newBookingAmount === undefined) {
       alert("Please select a date and number of guests");
       return;
     }
+    setLoading(true); 
     try {
       const result = totalBookings?.filter(
         (booking: IBooking) => booking.date === newBookingDate
@@ -234,8 +253,11 @@ export const AdminPage = () => {
 
       setDisabledBtn6(tablesBooked6 && tablesBooked6.length >= 15);
       setDisabledBtn9(tablesBooked9 && tablesBooked9.length >= 15);
+
     } catch (error) {
       console.error("An error occurred while getting booking data", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -256,6 +278,7 @@ export const AdminPage = () => {
       <header>
         <button onClick={handleCreateBooking}>Create reservation</button>
       </header>
+      {loading && <ThreeDots color="#A0A0A0" />}
       {showCreateBooking && (
         <div className="create-booking-container">
           <div className="create-booking-box">
@@ -338,7 +361,7 @@ export const AdminPage = () => {
         </div>
         <div className="booking-list">
           {filteredBookings.length === 0 ? (
-            <p>No bookings this day</p>
+            <p>No reservations on the selected time and day</p>
           ) : (
             <ul>
               {filteredBookings.map((booking) => (
