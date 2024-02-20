@@ -2,10 +2,11 @@ import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { AllBookings } from "../contexts/BookingContexts";
 import { IBooking } from "../models/IBooking";
 import { Customer } from "../models/Customer";
-import { getCustomer } from "../services/api";
+import { deleteBooking, getBooking, getCustomer } from "../services/api";
 import { BookingClass } from "../models/BookingClass";
 import axios from "axios";
 import { DeleteBooking } from "../components/DeleteBooking";
+import { NewCustomer } from "../models/NewCustomer";
 
 export const AdminPage = () => {
   const totalBookings = useContext(AllBookings);
@@ -16,6 +17,8 @@ export const AdminPage = () => {
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
   const [showCustomerEdit, setShowCustomerEdit] = useState<boolean>(false);
   const [showDelete, setShowDelete] = useState<boolean>(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
+  const [showCreateBooking, setShowCreateBooking] = useState<boolean>(false)
 
   const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
   const [customerInfo, setCustomerInfo] = useState<Customer[]>();
@@ -28,6 +31,9 @@ export const AdminPage = () => {
   const [newDate, setNewDate] = useState<string | null>(selectedDate);
   const [newTime, setNewTime] = useState<string | null>(selectedTime);
   const [newAmountOfGuests, setNewAmountOfGuests] = useState<number>();
+
+  const [bookingToDelete, setBookingToDelete] = useState<IBooking>();
+  const [customerToDelete, setCustomerToDelete] = useState<NewCustomer>();
 
   const [customerValuesToSend, setcustomerValuesToSend] = useState<Customer>({
     id: selectedBooking?.customerId!,
@@ -101,7 +107,6 @@ export const AdminPage = () => {
       return true; // visa alla bokningar om det inte finns ett valt datum
     }
   });
-  
 
   const handleEdit = async (booking: IBooking) => {
     setShowEditForm(true);
@@ -150,6 +155,28 @@ export const AdminPage = () => {
     }
   };
 
+  const handleDeleteBtn = async (booking: IBooking) => {
+    setShowDeleteConfirm(true);
+    // setSelectedBooking(booking)
+    if (booking._id && booking.customerId) {
+      const bookingToDeleteResponse = await getBooking(booking._id);
+      setBookingToDelete(bookingToDeleteResponse[0]);
+      console.log(bookingToDeleteResponse[0]);
+      const customerOfBooking = await getCustomer(booking.customerId);
+      setCustomerToDelete(customerOfBooking[0]);
+      console.log(customerOfBooking[0]);
+    }
+  };
+
+  const handleDeleteBooking = async () => {
+    if(bookingToDelete) {
+      const deletedBooking = await deleteBooking(bookingToDelete._id)
+      console.log('deleted booking', deletedBooking)
+    }
+    setShowDeleteConfirm(false)
+    location.reload()
+  }
+
   const handleClose = () => {
     if (showEditForm === true && showCustomerEdit === false) {
       setShowEditForm(false);
@@ -159,14 +186,26 @@ export const AdminPage = () => {
   };
 
   const handleCloseDelete = () => {
-    setShowDelete(false)
+    setShowDelete(false);
+  };
+
+
+  const handleCreateBooking = () => {
+    setShowCreateBooking(true)
   }
+
+
 
   return (
     <>
       <header>
-        <button>Create reservation</button>
+        <button onClick={handleCreateBooking}>Create reservation</button>
       </header>
+      {showCreateBooking && (
+        <div className="create-booking-container">
+          
+        </div>
+      )}
       <div className="main">
         <div className="side-bar">
           <div className="calendar-container">
@@ -187,12 +226,35 @@ export const AdminPage = () => {
                 {booking.time}, {booking.date}, {booking.customerId}
                 <div className="btn-container">
                   <button onClick={() => handleEdit(booking)}>Edit</button>
-                  <button>Delete</button>
+                  <button onClick={() => handleDeleteBtn(booking)}>
+                    Delete
+                  </button>
                 </div>
               </li>
             ))}
           </ul>
         </div>
+        {showDeleteConfirm && (
+          <div className="delete-confirm-container">
+            <div className="delete-confirm-box">
+              <h5>
+                Are you sure you want to delete booking {bookingToDelete?._id}?
+              </h5>
+              <h6>{bookingToDelete?.date}, {bookingToDelete?.time}, {bookingToDelete?.numberOfGuests} guests</h6>
+              <h6>
+                {customerToDelete?.name} {customerToDelete?.lastname}
+                <br />
+                {customerToDelete?.email}
+                <br />
+                {customerToDelete?.phone}
+              </h6>
+              <div className="delete-box-btns">
+                <button onClick={handleDeleteBooking}>Confirm</button>
+                <button>Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
         {showEditForm && (
           <div className="edit-container">
             <div className="edit-form">
@@ -330,7 +392,6 @@ export const AdminPage = () => {
           </div>
         </div>
       )}
-      <div>{/* <UpdateCustomer2 /> */}</div>
     </>
   );
 };
