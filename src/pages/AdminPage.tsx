@@ -2,7 +2,13 @@ import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { AllBookings } from "../contexts/BookingContexts";
 import { IBooking } from "../models/IBooking";
 import { Customer } from "../models/Customer";
-import { deleteBooking, getBooking, getCustomer } from "../services/api";
+import {
+  createBooking,
+  createCustomer,
+  deleteBooking,
+  getBooking,
+  getCustomer,
+} from "../services/api";
 import { BookingClass } from "../models/BookingClass";
 import axios from "axios";
 import { DeleteBooking } from "../components/DeleteBooking";
@@ -23,6 +29,7 @@ export const AdminPage = () => {
   const [showCreateBooking, setShowCreateBooking] = useState<boolean>(false);
   const [createCustomerForm, setCreateCustomerForm] = useState<boolean>(false);
   const [showTimeBtns, setShowTimeBtns] = useState<boolean>(false);
+  const [showConfirmBooking, setShowConfirmBooking] = useState<boolean>(false);
 
   const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
   const [customerInfo, setCustomerInfo] = useState<Customer[]>();
@@ -63,6 +70,26 @@ export const AdminPage = () => {
     customer: customerValuesToSend,
   });
 
+  const [newCustomerValues, setNewCustomerValues] = useState<NewCustomer>({
+    name: newName,
+    lastname: newLastname,
+    email: newEmail,
+    phone: newPhone,
+  });
+
+  const bookingData = {
+    restaurantId: "623b85d54396b96c57bde7c3",
+    date: newBookingDate!,
+    time: newBookingTime!,
+    numberOfGuests: newBookingAmount!,
+    customer: {
+      name: newName,
+      lastname: newLastname,
+      email: newEmail,
+      phone: newPhone,
+    },
+  };
+
   useEffect(() => {
     if (selectedBooking) {
       const newBookingValues = {
@@ -84,6 +111,13 @@ export const AdminPage = () => {
       phone: newPhone || (customerInfo ? customerInfo[0].phone : ""),
     };
     setcustomerValuesToSend(newValues);
+    const newCustomerInfo = {
+      name: newName,
+      lastname: newLastname,
+      email: newEmail,
+      phone: newPhone,
+    };
+    setNewCustomerValues(newCustomerInfo);
   }, [
     newDate,
     newTime,
@@ -243,12 +277,36 @@ export const AdminPage = () => {
     setNewBookingTime("18:00");
     console.log(newBookingTime);
     setCreateCustomerForm(true);
+    setShowCreateBooking(false);
   };
 
   const handleClickTimeBtn2 = () => {
     setNewBookingTime("21:00");
     console.log(newBookingTime);
     setCreateCustomerForm(true);
+    setShowCreateBooking(false);
+  };
+
+  const handleSaveNewCustomer = async () => {
+    const newCustomerResponse = await createCustomer(newCustomerValues);
+    console.log(newCustomerResponse);
+    setCreateCustomerForm(false);
+    setShowConfirmBooking(true);
+  };
+
+  const handleMakeBooking = async () => {
+    if (bookingData) {
+      const response = await axios.post(
+        "https://school-restaurant-api.azurewebsites.net/booking/create",
+        bookingData
+      );
+      console.log(response);
+      setShowConfirmBooking(false);
+    } else {
+      alert(
+        "Something went wrong when registrating the reservation. Please try again"
+      );
+    }
   };
 
   return (
@@ -259,6 +317,7 @@ export const AdminPage = () => {
       {showCreateBooking && (
         <div className="create-booking-container">
           <div className="create-booking-box">
+            <h3>Booking details</h3>
             <input
               type="date"
               value={newBookingDate}
@@ -300,26 +359,65 @@ export const AdminPage = () => {
       {createCustomerForm && (
         <div className="customer-form-container">
           <div className="customer-form">
+            <h3>Create customer profile</h3>
+            <h5>Booking details:</h5>
+            <p>
+              {newBookingDate}, {newBookingTime}
+              <br />
+              {newBookingAmount} guests
+            </p>
             <input
               type="text"
               placeholder="Firstname"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {}}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setNewName(e.target.value);
+              }}
             />
             <input
               type="text"
               placeholder="Lastname"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {}}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setNewLastname(e.target.value);
+              }}
             />
             <input
               type="text"
               placeholder="Email"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {}}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setNewEmail(e.target.value);
+              }}
             />
             <input
               type="text"
               placeholder="Phone"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {}}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setNewPhone(e.target.value);
+              }}
             />
+            <button onClick={handleSaveNewCustomer}>Save</button>
+          </div>
+        </div>
+      )}
+      {showConfirmBooking && (
+        <div className="confirm-backdrop">
+          <div className="confirm-box">
+            <h3>Booking details:</h3>
+            <h5>
+              Make a reservation for {newBookingAmount} guests, the{" "}
+              {newBookingDate} at {newBookingTime}.
+            </h5>
+            <h6>
+              {newName} {newLastname}
+            </h6>
+            <p>
+              {newEmail}
+              <br />
+              {newPhone}
+            </p>
+            <div className="new-customer-btn">
+              <button onClick={handleMakeBooking}>Confirm</button>
+              <button>Cancel</button>
+            </div>
           </div>
         </div>
       )}
