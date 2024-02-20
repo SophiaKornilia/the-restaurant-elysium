@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 export const Home = () => {
   return (
@@ -19,8 +20,12 @@ export const Home = () => {
       </div>
       <div className="background-container">
         <div className="image-container">
+        <Link to="/booking">
           <button className="book-btn">Book a table</button>
-          <button className="menu-btn">Menu</button>
+          </Link>
+          <Link to="/menu">
+          <button className="menu-btn"> Menu</button>
+          </Link>
         </div>
       </div>
     </>

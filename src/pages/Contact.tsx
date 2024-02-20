@@ -37,7 +37,6 @@ export const Contact = () => {
         <iframe
           width="520"
           height="400"
-          loading="lazy"
           src="https://maps.google.com/maps?width=520&amp;height=400&amp;hl=en&amp;q=G%C3%B6teborg%20+(Elysium)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
         ></iframe>
         {/* <form>

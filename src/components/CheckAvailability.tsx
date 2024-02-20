@@ -4,9 +4,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import { IBooking } from "../models/IBooking";
 import axios from "axios";
 import moment from "moment-timezone";
+
 import { Modal, Button } from "react-bootstrap";
 // import { CreateBooking } from "./CreateBooking";
 // import { CreateCustomer } from "./CreateCustomer";
+import { ThreeDots } from "react-loader-spinner";
+
 interface ICheckAvailabilityProps {
   time: (value: string) => void;
   chosenDate: (formatedDate: string) => void;
@@ -26,6 +29,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [datePickerDisabled, setDatePickerDisabled] = useState(false); 
   const [showModal, setShowModal] = useState(false);
   const [time, setTime] = useState("");
+  const [loading, setLoading] = useState(false);
   console.log(time);
 
   //test//
@@ -72,29 +76,32 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   }
 
   console.log("uppdaterat datum", selectedDate);
-
   const handleSearchClick = async (e: FormEvent) => {
     e.preventDefault();
     console.log("handleClick");
-
+  
+    setLoading(true);
+  
     const timezone: string = "Europe/Stockholm";
     const formattedSelectedDate: string = moment(selectedDate)
       .tz(timezone)
       .format("YYYY-MM-DD");
-
+  
     console.log("formaterat datum", formattedSelectedDate);
     setFormatedDate(formattedSelectedDate);
     props.chosenDate(formattedSelectedDate);
     props.peopleAmount(people);
-
+  
     bookings?.map((aBooking) => {
       console.log(aBooking.date, formattedSelectedDate);
     });
-
-    // hanterar sökningen efter lediga bord
+  
+    // hantera sökningen efter lediga bord
     if (formattedSelectedDate === "" || people === undefined) {
       alert("Please select a date and number of guests");
-    } else {
+      setLoading(false); 
+      return;
+    } 
       try {
         // hämta alla bokningar restaurangen har och filtrera fram de med samma datum
         const totalBookings = await getRestaurantBookings();
@@ -130,12 +137,15 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
           setButtonDisabled(true);
           setShowModal(true);
         }
-      } catch (error) {
-        console.error("An error occurred while getting booking data", error);
-      }
+      } 
+    } catch (error) {
+      console.error("An error occurred while getting booking data", error);
+    } finally {
+      setLoading(false);
     }
     
   };
+ 
 
   const handleClickTimeBtn1 = () => {
     setTime("18:00");
@@ -170,6 +180,13 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
 
   return (
     <div id="form-container">
+         {/* Visar laddningsindikatorn om loading är true */}
+      {loading ? (
+        <div className="loader-container">
+          <ThreeDots color="#00BFFF" height={100} width={100} />
+        </div>
+      ) : (
+        /* Visar formuläret och annat innehåll om loading är false */
       {/* <button onClick={logCopy1}>Logga kopia</button> */}
       <div>
         <h1>Welcome to Elysium</h1>
@@ -230,7 +247,6 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
           </Button>
         </Modal.Footer>
       </Modal>
-    
     </div>
   );
-};
+      }
