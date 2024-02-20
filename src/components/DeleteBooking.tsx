@@ -14,11 +14,11 @@ export const DeleteBooking = () => {
   };
 
   return (
-    <div>
-      <h3>Do you want to delete your booking?</h3>
-      <label>Skriv in bokningsnumret</label>
-      <input type="text" value={input} onChange={handleChange}></input>
+    <>
+      <h3>Do you want to delete a booking?</h3>
+      <label>Enter the booking ID</label>
+      <input type="text" value={input} onChange={handleChange} placeholder="Booking ID"></input>
       <button onClick={handleClickDelete}>Delete booking</button>
-    </div>
+    </>
   );
 };

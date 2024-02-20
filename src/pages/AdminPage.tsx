@@ -2,21 +2,23 @@ import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { AllBookings } from "../contexts/BookingContexts";
 import { IBooking } from "../models/IBooking";
 import { Customer } from "../models/Customer";
-import { getCustomer, updateBooking, updateCustomer } from "../services/api";
+import { getCustomer } from "../services/api";
 import { BookingClass } from "../models/BookingClass";
 import axios from "axios";
+import { DeleteBooking } from "../components/DeleteBooking";
 
 export const AdminPage = () => {
   const totalBookings = useContext(AllBookings);
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
+  const [showCustomerEdit, setShowCustomerEdit] = useState<boolean>(false);
+  const [showDelete, setShowDelete] = useState<boolean>(false);
 
   const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
   const [customerInfo, setCustomerInfo] = useState<Customer[]>();
-
-  const [showCustomerEdit, setShowCustomerEdit] = useState<boolean>(false);
 
   const [newName, setNewName] = useState("");
   const [newLastname, setNewLastname] = useState("");
@@ -99,6 +101,7 @@ export const AdminPage = () => {
       return true; // visa alla bokningar om det inte finns ett valt datum
     }
   });
+  
 
   const handleEdit = async (booking: IBooking) => {
     setShowEditForm(true);
@@ -111,24 +114,24 @@ export const AdminPage = () => {
     }
   };
 
-  const checkValues = () => {
-    console.log("Personal info:", customerValuesToSend);
-    console.log("Booking info:", newBookingInfo);
-    console.log(customerValuesToSend.id);
-  };
+  // const checkValues = () => {
+  //   console.log("Personal info:", customerValuesToSend);
+  //   console.log("Booking info:", newBookingInfo);
+  //   console.log(customerValuesToSend.id);
+  // };
 
-  const handleUpdateCustomer = async () => {
-    const updateCustomerResponse = await axios.put(
-      "https://school-restaurant-api.azurewebsites.net/customer/update/" +
-        newBookingInfo.customerId,
-      customerValuesToSend
-    );
-    console.log(updateCustomerResponse);
-    setShowEditForm(false);
-  };
-
-  const handleClose = () => {
-    setShowEditForm(false);
+  const handleBookingUpdate = async () => {
+    try {
+      const updateBookingResponse = await axios.put(
+        "https://school-restaurant-api.azurewebsites.net/booking/update/" +
+          newBookingInfo.id,
+        newBookingInfo
+      );
+      console.log(updateBookingResponse);
+      setShowEditForm(false);
+    } catch {
+      alert("Something went wrong when updating the booking");
+    }
   };
 
   const handleSaveCustomer = async () => {
@@ -140,24 +143,42 @@ export const AdminPage = () => {
           customerValuesToSend
         );
         console.log("response:", updateCustomerResponse);
+        setShowCustomerEdit(false);
       } catch (error) {
-        console.log(customerValuesToSend);
-        alert("went to catch");
+        alert("Something went wrong when updating the customer");
       }
     }
   };
 
+  const handleClose = () => {
+    if (showEditForm === true && showCustomerEdit === false) {
+      setShowEditForm(false);
+    } else if (showEditForm === true && showCustomerEdit === true) {
+      setShowCustomerEdit(false);
+    }
+  };
+
+  const handleCloseDelete = () => {
+    setShowDelete(false)
+  }
+
   return (
     <>
       <header>
-        <button>Reservations</button>
         <button>Create reservation</button>
       </header>
       <div className="main">
-        <div className="calendar-container">
-          <input type="date" onChange={handleDate} />
-          <button onClick={handleFilter18}>18:00</button>
-          <button onClick={handleFilter21}>21:00</button>
+        <div className="side-bar">
+          <div className="calendar-container">
+            <input type="date" onChange={handleDate} />
+            <button onClick={handleFilter18}>18:00</button>
+            <button onClick={handleFilter21}>21:00</button>
+          </div>
+          <div className="quick-actions">
+            <button onClick={() => setShowDelete(true)}>
+              Delete booking by booking ID
+            </button>
+          </div>
         </div>
         <div className="booking-list">
           <ul>
@@ -181,7 +202,6 @@ export const AdminPage = () => {
                   <h4>Date:</h4>
                   <input
                     type="date"
-                    // value={newDate || ""}
                     value={newDate || selectedBooking?.date}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       setNewDate(e.target.value);
@@ -210,7 +230,6 @@ export const AdminPage = () => {
                     min={1}
                     max={6}
                     value={newAmountOfGuests || selectedBooking?.numberOfGuests}
-                    // value={newAmountOfGuests || ""}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       setNewAmountOfGuests(parseInt(e.target.value));
                     }}
@@ -222,19 +241,19 @@ export const AdminPage = () => {
               <div className="customer-info">
                 <div className="info-unit">
                   <label>Name:</label>
-                  <p>{customerInfo?.[0].name}</p>
+                  <p>{newName || customerInfo?.[0].name}</p>
                 </div>
                 <div className="info-unit">
                   <label>Lastname:</label>
-                  <p>{customerInfo?.[0].lastname}</p>
+                  <p>{newLastname || customerInfo?.[0].lastname}</p>
                 </div>
                 <div className="info-unit">
                   <label>Email:</label>
-                  <p>{customerInfo?.[0].email}</p>
+                  <p>{newEmail || customerInfo?.[0].email}</p>
                 </div>
                 <div className="info-unit">
                   <label>Phone:</label>
-                  <p>{customerInfo?.[0].phone}</p>
+                  <p>{newPhone || customerInfo?.[0].phone}</p>
                 </div>
                 <button onClick={() => setShowCustomerEdit(true)}>
                   Edit customer
@@ -243,7 +262,7 @@ export const AdminPage = () => {
               {showCustomerEdit && (
                 <div className="edit-container">
                   <div className="edit-customer">
-                      <h3>Change personal information</h3>
+                    <h3>Change personal information</h3>
                     <div className="edit-info-unit">
                       <label>Name:</label>
                       <input
@@ -289,28 +308,29 @@ export const AdminPage = () => {
                       />
                     </div>
                     <button onClick={handleSaveCustomer}>Save changes</button>
-                    <button>Cancel</button>
+                    <button onClick={handleClose}>Cancel</button>
                   </div>
                 </div>
               )}
               <div className="btn-unit">
-                <button onClick={checkValues}>Check values to send</button>
-                {/* <button onClick={handleCustomerUpdate}>Update customer</button>
-                <button onClick={handleBookingUpdate}>Update booking</button> */}
+                {/* <button onClick={checkValues}>Check values to send</button> */}
+                {/* <button onClick={handleCustomerUpdate}>Update customer</button> */}
+                <button onClick={handleBookingUpdate}>Update booking</button>
                 <button onClick={handleClose}>Cancel</button>
               </div>
             </div>
           </div>
         )}
       </div>
-      <div>
-        {" "}
-        {/* La de komponenterna ni gjorde här! :) */}
-        <h1>Adminpage</h1>
-        {/* <DeleteBooking /> */}
-        <br />
-        {/* <UpdateCustomer2 /> */}
-      </div>
+      {showDelete && (
+        <div className="delete-container">
+          <div className="delete-box">
+            <DeleteBooking />
+            <button onClick={handleCloseDelete}>Cancel</button>
+          </div>
+        </div>
+      )}
+      <div>{/* <UpdateCustomer2 /> */}</div>
     </>
   );
 };
