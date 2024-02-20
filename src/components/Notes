@@ -27,21 +27,38 @@ admingPage
 -går det att ändra så kundens namn står. 
 */
  
-
+__________________________________________________________________________________________________________________________________
  Adminpage 
  - Cancelknappen
  - Lägg namn på kunden i listan
  - Kolla om det finns ledig tid vid ombokning. 
  - Lägg in deletefunktion på knapp.
  - Animationer 
- - Skapa en reservation
+ - Skapa en reservation - create reservation
  - koppla inloggningen till adminpage
+ - om Det inte finns bokningar så skriv "no reservations"
 
  Animationer - vart ska de vara? 
  - på alla try/catch 
  - vi får testa applikationen och se vart de ska vara 
 
  Homepage 
- -knapparna se till att de fungerar. 
+ -knapparna se till att de fungerar. Book a table och menu
+
+ Header
+ -visa vad vi är i headern, active.
+
+ Footer
+ -göra iconer till länkar
+ -Stylingen på den knappen
+
+ Contact
+ -spinner till kartan
+
+ Book a table
+ - Fixa designen på make a reservation
+ - när man klickar på close borde allt bli nollställt.
+ - ta bort logga kopior knappen
+ - måste välja dator innan man klickar search tables.
 
 
