@@ -27,9 +27,14 @@ const handleLogin = () => {
 };
 
 return (
-  <div>
-    <Button variant="primary" onClick={handleShow}>
-    Log in
+<div>
+<Button  
+variant="link"
+id="link-light"
+onClick={handleShow}
+style={{ color: '#A0A0A0', textDecoration: 'none' }}
+ >
+Admin
 </Button>
  <Modal show={show} 
  onHide={handleClose} 
