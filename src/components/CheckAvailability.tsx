@@ -1,10 +1,17 @@
-import { ChangeEvent, FormEvent, SetStateAction, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IBooking } from "../models/IBooking";
 import axios from "axios";
 import moment from "moment-timezone";
 import { ThreeDots } from "react-loader-spinner";
+import { Modal, Button } from "react-bootstrap";
 
 interface ICheckAvailabilityProps {
   time: (value: string) => void;
@@ -21,6 +28,9 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   const [disableBtn9, setDisabledBtn9] = useState<boolean>(false);
   const [showTimeBtns, setShowTimeBtns] = useState<boolean>(false);
   const [formatedDate, setFormatedDate] = useState<string>("");
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [datePickerDisabled, setDatePickerDisabled] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [time, setTime] = useState("");
   const [loading, setLoading] = useState(false);
   console.log(time);
@@ -30,6 +40,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
 
   console.log(props.time);
   console.log(formatedDate);
+  console.log(buttonDisabled);
 
   const getRestaurantBookings = async () => {
     try {
@@ -51,6 +62,21 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
     setSelectedDate(date);
     setDisabledBtn6(false);
     setDisabledBtn9(false);
+  };
+
+  useEffect(() => {
+    if (selectedDate !== null) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [selectedDate]);
+
+  const reset = () => {
+    setPeople(1);
+    setSelectedDate(new Date());
+    setButtonDisabled(true);
+    setDatePickerDisabled(false);
   };
 
   console.log("uppdaterat datum", selectedDate);
@@ -112,6 +138,9 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
         setShowTimeBtns(false);
       } else {
         setShowTimeBtns(true);
+        setDatePickerDisabled(true);
+        setButtonDisabled(true);
+        setShowModal(true);
       }
     } catch (error) {
       console.error("An error occurred while getting booking data", error);
@@ -124,12 +153,16 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
     setTime("18:00");
     props.time("18:00");
     props.setShowModal(true);
+    setShowModal(false);
+    reset();
   };
 
   const handleClickTimeBtn2 = () => {
     setTime("21:00");
     props.time("21:00");
     props.setShowModal(true);
+    setShowModal(false);
+    reset();
   };
   console.log(time);
 
@@ -141,6 +174,10 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
   //   console.log(time);
   //   console.log(people);
   // };
+  const handleClose = () => {
+    setShowModal(false);
+    reset();
+  };
 
   return (
     <div id="form-container">
@@ -165,6 +202,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
               placeholder="Press to chose number of guests"
               value={people}
               onChange={handleFormChange}
+              disabled={datePickerDisabled}
             />
             <br></br>
             <DatePicker
@@ -174,28 +212,43 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
               dateFormat="yyyy-MM-dd"
               minDate={new Date()}
               maxDate={maxDate}
+              disabled={datePickerDisabled}
             ></DatePicker>
             <br />
             <br />
-            <button onClick={handleSearchClick}>Search available tables</button>
+            <button onClick={handleSearchClick} disabled={buttonDisabled}>Search available tables</button>
           </form>
-          <div className={!showTimeBtns ? "time-btns display" : "time-btns"}>
-            <h4>Pick a time</h4>
-            <button
-              disabled={disableBtn6}
-              className="time-btn"
-              onClick={handleClickTimeBtn1}
-            >
-              18:00
-            </button>
-            <button
-              disabled={disableBtn9}
-              className="time-btn"
-              onClick={handleClickTimeBtn2}
-            >
-              21:00
-            </button>
-          </div>
+          <Modal show={showModal} onHide={handleClose} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Choose a time for your reservation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div
+                className={!showTimeBtns ? "time-btns display" : "time-btns"}
+              >
+                <button
+                  disabled={disableBtn6}
+                  className="time-btn"
+                  onClick={handleClickTimeBtn1}
+                >
+                  18:00
+                </button>
+                <button
+                  disabled={disableBtn9}
+                  className="time-btn"
+                  onClick={handleClickTimeBtn2}
+                >
+                  21:00
+                </button>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              {/* <Button variant="secondary">Book</Button> */}
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
       )}
     </div>
