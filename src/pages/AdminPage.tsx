@@ -18,7 +18,7 @@ export const AdminPage = () => {
   const [showCustomerEdit, setShowCustomerEdit] = useState<boolean>(false);
   const [showDelete, setShowDelete] = useState<boolean>(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
-  const [showCreateBooking, setShowCreateBooking] = useState<boolean>(false)
+  const [showCreateBooking, setShowCreateBooking] = useState<boolean>(false);
 
   const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
   const [customerInfo, setCustomerInfo] = useState<Customer[]>();
@@ -169,13 +169,13 @@ export const AdminPage = () => {
   };
 
   const handleDeleteBooking = async () => {
-    if(bookingToDelete) {
-      const deletedBooking = await deleteBooking(bookingToDelete._id)
-      console.log('deleted booking', deletedBooking)
+    if (bookingToDelete) {
+      const deletedBooking = await deleteBooking(bookingToDelete._id);
+      console.log("deleted booking", deletedBooking);
     }
-    setShowDeleteConfirm(false)
-    location.reload()
-  }
+    setShowDeleteConfirm(false);
+    location.reload();
+  };
 
   const handleClose = () => {
     if (showEditForm === true && showCustomerEdit === false) {
@@ -189,23 +189,16 @@ export const AdminPage = () => {
     setShowDelete(false);
   };
 
-
   const handleCreateBooking = () => {
-    setShowCreateBooking(true)
-  }
-
-
+    setShowCreateBooking(true);
+  };
 
   return (
     <>
       <header>
         <button onClick={handleCreateBooking}>Create reservation</button>
       </header>
-      {showCreateBooking && (
-        <div className="create-booking-container">
-          
-        </div>
-      )}
+      {showCreateBooking && <div className="create-booking-container"></div>}
       <div className="main">
         <div className="side-bar">
           <div className="calendar-container">
@@ -220,23 +213,23 @@ export const AdminPage = () => {
           </div>
         </div>
         <div className="booking-list">
-        {filteredBookings.length === 0 ? (
-          <p>No bookings this day</p>
-        ) : (
-          <ul>
-            {filteredBookings.map((booking) => (
-              <li key={booking._id} className="booking-unit">
-                {booking.time}, {booking.date}, {booking.customerId}
-                <div className="btn-container">
-                  <button onClick={() => handleEdit(booking)}>Edit</button>
-                  <button onClick={() => handleDeleteBtn(booking)}>
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-
+          {filteredBookings.length === 0 ? (
+            <p>No bookings this day</p>
+          ) : (
+            <ul>
+              {filteredBookings.map((booking) => (
+                <li key={booking._id} className="booking-unit">
+                  {booking.time}, {booking.date}, {booking.customerId}
+                  <div className="btn-container">
+                    <button onClick={() => handleEdit(booking)}>Edit</button>
+                    <button onClick={() => handleDeleteBtn(booking)}>
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         {showDeleteConfirm && (
           <div className="delete-confirm-container">
@@ -244,7 +237,10 @@ export const AdminPage = () => {
               <h5>
                 Are you sure you want to delete booking {bookingToDelete?._id}?
               </h5>
-              <h6>{bookingToDelete?.date}, {bookingToDelete?.time}, {bookingToDelete?.numberOfGuests} guests</h6>
+              <h6>
+                {bookingToDelete?.date}, {bookingToDelete?.time},{" "}
+                {bookingToDelete?.numberOfGuests} guests
+              </h6>
               <h6>
                 {customerToDelete?.name} {customerToDelete?.lastname}
                 <br />
