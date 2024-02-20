@@ -63,18 +63,18 @@ export const CreateBooking = (props: ICreateBookingProps) => {
       {bookingData && (
         <div className={props.hide ? (isButtonClicked ? "display" : "") : "display"}>
           <h3>
-            {bookingData.customer.name}", press confirm to confirm your
+            {bookingData.customer.name}, press confirm to confirm your
             booking."
           </h3>
-          <h4>Date: {bookingData.date}</h4>
-          <h4>Time: {bookingData.time}</h4>
+          <h5>Date: {bookingData.date}</h5>
+          <h5>Time: {bookingData.time}</h5>
           <button onClick={handleClick}>Confirm</button>
         </div>
       )}
       <div className={isButtonClicked ? "" : "display"}>
         <h3>
           You have booked a table at Elysium on {bookingData.date} at{" "}
-          {bookingData.time} for {bookingData.numberOfGuests} people.
+          {bookingData.time} for {bookingData.numberOfGuests} people. 
         </h3>
       </div>
     </div>

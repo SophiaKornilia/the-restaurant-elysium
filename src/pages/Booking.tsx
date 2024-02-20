@@ -19,7 +19,6 @@ export const Booking = () => {
   const [timeCopy, setTimeCopy] = useState("");
   const [show, setShow] = useState(false);
   const [hideCopy, setHideCopy] = useState(false);
- 
 
   const handleCustomerCreated = (customer: NewCustomer) => {
     if (!customer) {
@@ -48,17 +47,20 @@ export const Booking = () => {
     setShow(true);
   };
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    
+  } 
 
   // Säkerställa kopia
-  const logCopy = () => {
-    console.log(bookingCustomer);
-    console.log(selectedDateCopy);
-    console.log(peopleCopy);
-    console.log(timeCopy);
-    console.log(hideCopy);
+  // const logCopy = () => {
+  //   console.log(bookingCustomer);
+  //   console.log(selectedDateCopy);
+  //   console.log(peopleCopy);
+  //   console.log(timeCopy);
+  //   console.log(hideCopy);
     
-  };
+  // };
 
   return (
     <div id="container">
@@ -90,7 +92,7 @@ export const Booking = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <button onClick={logCopy}>Logga kopia</button>
+      {/* <button onClick={logCopy}>Logga kopia</button> */}
     </div>
   );
 };
