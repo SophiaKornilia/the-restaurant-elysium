@@ -1,5 +1,5 @@
 #container {
-  min-height: 70vh;
+  min-height: 100vh;
   background-image: url("../images/image6.png");
   background-size: cover;
   background-position: center;
@@ -68,7 +68,7 @@
   display: none;
 }
 
-input, DatePicker {
-  box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
-  
+input,
+DatePicker {
+  box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
 }

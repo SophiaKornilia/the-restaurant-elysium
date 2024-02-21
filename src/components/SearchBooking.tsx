@@ -15,8 +15,6 @@ export const SearchBooking = () => {
     console.log(specificBooking);
     setBookingData(specificBooking); 
     setCustomerId('')
-
-    // Användningen av bookingData är enbart för det visuella på skärmen
   };
 
   return (

@@ -10,7 +10,6 @@ import {
 } from "../services/api";
 import { BookingClass } from "../models/BookingClass";
 import axios from "axios";
-import { DeleteBooking } from "../components/DeleteBooking";
 import { NewCustomer } from "../models/NewCustomer";
 import "react-datepicker/dist/react-datepicker.css";
 import { ThreeDots } from "react-loader-spinner";
@@ -165,11 +164,6 @@ export const AdminPage = () => {
     }
   };
 
-  // const checkValues = () => {
-  //   console.log("Personal info:", customerValuesToSend);
-  //   console.log("Booking info:", newBookingInfo);
-  //   console.log(customerValuesToSend.id);
-  // };
 
   const handleBookingUpdate = async () => {
     try {
