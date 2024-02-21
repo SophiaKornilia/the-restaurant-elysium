@@ -94,13 +94,8 @@ export const Menu = () => {
             </h5>
           </div>
         </div>
-        <div className="extra-containers">
-          <div className="extra-container"></div>
-          <div className="small-container"></div>
-        </div>
       </div>
     </>
   );
 };
 
-// Ska ta och göra en map funktion här, det ska inte vara hårdkodat som nu :)

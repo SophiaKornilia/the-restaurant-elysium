@@ -64,6 +64,8 @@ export const Booking = () => {
 
   return (
     <div id="container">
+      <p>Make a reservation at</p>
+      <h2>elysium</h2>
       <CheckAvailability
         time={handleTimeCopy}
         chosenDate={handleSelectedDateCopy}

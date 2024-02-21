@@ -188,10 +188,9 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
         </div>
       ) : (
         /* Visar formuläret och annat innehåll om loading är false */
-        <div>
+        <>
           <div>
-            <h1>Welcome to Elysium</h1>
-            <h3>Make a reservation </h3>
+            <h5>Tell us how big your company is and when you would like to dine</h5>
           </div>
           <form>
             <input
@@ -204,7 +203,6 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
               onChange={handleFormChange}
               disabled={datePickerDisabled}
             />
-            <br></br>
             <DatePicker
               selected={selectedDate}
               placeholderText="Press to chose a date"
@@ -214,8 +212,6 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
               maxDate={maxDate}
               disabled={datePickerDisabled}
             ></DatePicker>
-            <br />
-            <br />
             <button onClick={handleSearchClick} disabled={buttonDisabled}>Search available tables</button>
           </form>
           <Modal show={showModal} onHide={handleClose} centered>
@@ -249,7 +245,7 @@ export const CheckAvailability = (props: ICheckAvailabilityProps) => {
               </Button>
             </Modal.Footer>
           </Modal>
-        </div>
+        </>
       )}
     </div>
   );
