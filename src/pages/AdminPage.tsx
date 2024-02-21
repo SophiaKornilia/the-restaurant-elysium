@@ -94,6 +94,7 @@ export const AdminPage = () => {
   };
 
   useEffect(() => {
+    if(customerId) {
     if (selectedBooking) {
       const newBookingValues = {
         id: selectedBooking._id ?? "",
@@ -121,7 +122,7 @@ export const AdminPage = () => {
       phone: newPhone,
     };
     setNewCustomerValues(newCustomerInfo);
-  }, [
+  }}, [
     newDate,
     newTime,
     newAmountOfGuests,
@@ -322,6 +323,10 @@ export const AdminPage = () => {
     setShowConfirmBooking(true);
   };
 
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false)
+  }
+
   const handleMakeBooking = async () => {
     if (bookingData) {
       const response = await axios.post(
@@ -336,6 +341,7 @@ export const AdminPage = () => {
       );
     }
   };
+  
 
   return (
     <>
@@ -507,7 +513,7 @@ export const AdminPage = () => {
               </h6>
               <div className="delete-box-btns">
                 <button onClick={handleDeleteBooking}>Confirm</button>
-                <button>Cancel</button>
+                <button onClick={handleCancelDelete}>Cancel</button>
               </div>
             </div>
           </div>
