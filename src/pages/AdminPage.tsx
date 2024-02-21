@@ -3,7 +3,6 @@ import { AllBookings } from "../contexts/BookingContexts";
 import { IBooking } from "../models/IBooking";
 import { Customer } from "../models/Customer";
 import {
-  createBooking,
   createCustomer,
   deleteBooking,
   getBooking,
@@ -13,10 +12,8 @@ import { BookingClass } from "../models/BookingClass";
 import axios from "axios";
 import { DeleteBooking } from "../components/DeleteBooking";
 import { NewCustomer } from "../models/NewCustomer";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ThreeDots } from "react-loader-spinner";
-
 
 export const AdminPage = () => {
   const totalBookings = useContext(AllBookings);
@@ -48,13 +45,14 @@ export const AdminPage = () => {
   const [bookingToDelete, setBookingToDelete] = useState<IBooking>();
   const [customerToDelete, setCustomerToDelete] = useState<NewCustomer>();
 
+  // Dessa borde man kunnabyta ut till de liknande staten över
   const [newBookingDate, setNewBookingdate] = useState<string>();
   const [newBookingAmount, setNewBookingAmount] = useState<number>();
   const [newBookingTime, setNewBookingTime] = useState<string>();
   const [disableBtn6, setDisabledBtn6] = useState<boolean>(true);
   const [disableBtn9, setDisabledBtn9] = useState<boolean>(true);
- const [loading, setLoading] = useState(false);
 
+  const [loading, setLoading] = useState(false);
 
   const [customerValuesToSend, setcustomerValuesToSend] = useState<Customer>({
     id: selectedBooking?.customerId!,
@@ -182,17 +180,17 @@ export const AdminPage = () => {
       );
       console.log(updateBookingResponse);
       setShowEditForm(false);
-      setLoading(true)
+      setLoading(true);
     } catch {
       alert("Something went wrong when updating the booking");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
   const handleSaveCustomer = async () => {
     if (customerValuesToSend) {
-      setLoading(true); 
+      setLoading(true);
       try {
         const updateCustomerResponse = await axios.put(
           "https://school-restaurant-api.azurewebsites.net/customer/update/" +
@@ -208,11 +206,9 @@ export const AdminPage = () => {
       }
     }
   };
-  
 
   const handleDeleteBtn = async (booking: IBooking) => {
     setShowDeleteConfirm(true);
-    // setSelectedBooking(booking)
     if (booking._id && booking.customerId) {
       const bookingToDeleteResponse = await getBooking(booking._id);
       setBookingToDelete(bookingToDeleteResponse[0]);
@@ -225,7 +221,7 @@ export const AdminPage = () => {
 
   const handleDeleteBooking = async () => {
     if (bookingToDelete) {
-      setLoading(true); 
+      setLoading(true);
       try {
         const deletedBooking = await deleteBooking(bookingToDelete._id);
         console.log("deleted booking", deletedBooking);
@@ -255,6 +251,18 @@ export const AdminPage = () => {
     setShowCreateBooking(true);
   };
 
+  const handleCloseBooking = () => {
+    setShowCreateBooking(false);
+    setNewBookingdate("");
+    setNewBookingAmount(0);
+    setShowTimeBtns(false);
+  };
+
+  const handleCloseCustomer = () => {
+    setCreateCustomerForm(false);
+    setShowCreateBooking(true);
+  };
+
   const handleNewBookingAmount = (e: ChangeEvent<HTMLInputElement>) => {
     setNewBookingAmount(parseInt(e.target.value));
   };
@@ -264,7 +272,7 @@ export const AdminPage = () => {
       alert("Please select a date and number of guests");
       return;
     }
-    setLoading(true); 
+    setLoading(true);
     try {
       const result = totalBookings?.filter(
         (booking: IBooking) => booking.date === newBookingDate
@@ -287,7 +295,6 @@ export const AdminPage = () => {
 
       setDisabledBtn6(tablesBooked6 && tablesBooked6.length >= 15);
       setDisabledBtn9(tablesBooked9 && tablesBooked9.length >= 15);
-
     } catch (error) {
       console.error("An error occurred while getting booking data", error);
     } finally {
@@ -357,7 +364,10 @@ export const AdminPage = () => {
               value={newBookingAmount}
               onChange={handleNewBookingAmount}
             />
-            <button onClick={handleSearch}>Search for available times</button>
+            <div className="btns">
+              <button onClick={handleSearch}>Search for available times</button>
+              <button onClick={handleCloseBooking}>Cancel</button>
+            </div>
             {showTimeBtns && (
               <div className="time-btn">
                 <button
@@ -417,7 +427,10 @@ export const AdminPage = () => {
                 setNewPhone(e.target.value);
               }}
             />
-            <button onClick={handleSaveNewCustomer}>Save</button>
+            <div className="btn-container">
+              <button onClick={handleSaveNewCustomer}>Save</button>
+              <button onClick={handleCloseCustomer}>Cancel</button>
+            </div>
           </div>
         </div>
       )}
@@ -500,7 +513,6 @@ export const AdminPage = () => {
             </div>
           </div>
         )}
-
         {showEditForm && (
           <div className="edit-container">
             <div className="edit-form">
