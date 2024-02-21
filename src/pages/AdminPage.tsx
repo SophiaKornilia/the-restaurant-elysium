@@ -13,6 +13,7 @@ import axios from "axios";
 import { NewCustomer } from "../models/NewCustomer";
 import "react-datepicker/dist/react-datepicker.css";
 import { ThreeDots } from "react-loader-spinner";
+import { DeleteBooking } from "../components/DeleteBooking";
 
 export const AdminPage = () => {
   const totalBookings = useContext(AllBookings);
@@ -30,6 +31,7 @@ export const AdminPage = () => {
   const [showConfirmBooking, setShowConfirmBooking] = useState<boolean>(false);
 
   const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
+  const customerId = selectedBooking?.customerId || "";
   const [customerInfo, setCustomerInfo] = useState<Customer[]>();
 
   const [newName, setNewName] = useState("");
@@ -54,7 +56,7 @@ export const AdminPage = () => {
   const [loading, setLoading] = useState(false);
 
   const [customerValuesToSend, setcustomerValuesToSend] = useState<Customer>({
-    id: selectedBooking?.customerId!,
+    id: customerId,
     name: newName,
     lastname: newLastname,
     email: newEmail,
@@ -62,12 +64,12 @@ export const AdminPage = () => {
   });
 
   const [newBookingInfo, setNewBookingInfo] = useState<BookingClass>({
-    id: selectedBooking?._id!,
-    restaurantId: selectedBooking?.restaurantId!,
+    id: customerId,
+    restaurantId: customerId,
     date: newDate!,
     time: newTime!,
     numberOfGuests: newAmountOfGuests!,
-    customerId: selectedBooking?.customerId!,
+    customerId: customerId,
     customer: customerValuesToSend,
   });
 
@@ -105,7 +107,7 @@ export const AdminPage = () => {
       setNewBookingInfo(newBookingValues);
     }
     const newValues = {
-      id: selectedBooking?.customerId!,
+      id: customerId,
       name: newName || (customerInfo ? customerInfo[0].name : ""),
       lastname: newLastname || (customerInfo ? customerInfo[0].lastname : ""),
       email: newEmail || (customerInfo ? customerInfo[0].email : ""),
@@ -128,6 +130,9 @@ export const AdminPage = () => {
     newEmail,
     newPhone,
     customerInfo,
+    customerValuesToSend,
+    selectedBooking,
+    customerId
   ]);
 
   const handleDate = (e: ChangeEvent<HTMLInputElement>) => {
@@ -634,6 +639,14 @@ export const AdminPage = () => {
           </div>
         )}
       </div>
+         {showDelete && (
+        <div className="delete-container">
+          <div className="delete-box">
+            <DeleteBooking />
+            <button onClick={handleCloseDelete}>Cancel</button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
