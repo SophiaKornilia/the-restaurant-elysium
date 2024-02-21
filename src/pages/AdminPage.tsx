@@ -627,8 +627,6 @@ export const AdminPage = () => {
                 </div>
               )}
               <div className="btn-unit">
-                {/* <button onClick={checkValues}>Check values to send</button> */}
-                {/* <button onClick={handleCustomerUpdate}>Update customer</button> */}
                 <button onClick={handleBookingUpdate}>Update booking</button>
                 <button onClick={handleClose}>Cancel</button>
               </div>
@@ -636,14 +634,6 @@ export const AdminPage = () => {
           </div>
         )}
       </div>
-      {showDelete && (
-        <div className="delete-container">
-          <div className="delete-box">
-            <DeleteBooking />
-            <button onClick={handleCloseDelete}>Cancel</button>
-          </div>
-        </div>
-      )}
     </>
   );
 };
