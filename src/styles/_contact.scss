@@ -1,5 +1,5 @@
 #contactContainer {
-  min-height: 70vh;
+  min-height: 100vh;
   background-image: url("../images/image\ 5.png");
   background-size: cover;
   background-position: center;
@@ -34,13 +34,15 @@
   }
 
   #formContainer {
-    // width: 520px;
-    // background: rgba(217, 217, 217, 0.2);
-    // backdrop-filter: blur(7.5px);
-    // height: 400px;
-    // margin:50px; 
-    // margin-left: 20px;
-    // padding: 20px 0px; 
+    width: 520px;
+    height: 400px;
+    margin:50px; 
+    margin-left: 20px;
+    padding: 20px 0px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
 
     form {
       display: flex;
